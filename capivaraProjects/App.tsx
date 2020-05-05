@@ -20,7 +20,7 @@ import {
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import  Login  from './views/Login';
+import  Login from './src/views/Login';
 
 declare const global: {HermesInternal: null | {}};
 
