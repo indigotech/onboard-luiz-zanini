@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
   sectionButtonInput: {
     backgroundColor :"#8A2BE2",
     borderRadius: 15,
-    minHeight: 20,
     height: 45,
+    justifyContent: "center",
   },
   sectionText: {
     height: 25,
