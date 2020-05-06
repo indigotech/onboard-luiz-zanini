@@ -7,47 +7,48 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import LoginController from "../controller/LoginController";
+import validateLoginInput from "../validate/validateLoginInput";
 
-type stateLogin = {
+interface LoginState {
   emailInput: string,
-  senhaInput: string
+  passwordInput: string
 }
 
-class Login extends Component<{}, stateLogin>{
+class Login extends Component<{}, LoginState>{
 
-  constructor(props:any){
-    super(props);
+  constructor(LoginProps:any){
+  
+    super(LoginProps);
 
     this.state = {
       emailInput : "",
-      senhaInput : "",
+      passwordInput : "",
     }
     
   }
 
-  click(state:any){
-    console.log(state);
-  }
-
   render(){
     return(
-    <View style={styles.sectionViewInput}>
-      <Text style={styles.sectionText}>E-mail</Text>
-      <TextInput 
-        style={styles.sectionTextInput} 
-        onChangeText={(text) => this.setState({emailInput : text})}
-      />
-      <Text style={styles.sectionText} >Senha</Text>
-      <TextInput
-        secureTextEntry={true} 
-        style={styles.sectionTextInput} 
-        onChangeText={(text) => this.setState({senhaInput : text})}
-      />
-      <View style={styles.sectionButtonInput}>
-        <Button  color="#FFFFFF" onPress={ () => LoginController(this.state) } title="Entrar" />
+      <View style={styles.sectionViewInput}>
+        <Text style={styles.sectionText}>E-mail</Text>
+        <TextInput 
+          style={styles.sectionTextInput} 
+          onChangeText={(text) => this.setState({emailInput : text})}
+        />
+        <Text style={styles.sectionText} >Senha</Text>
+        <TextInput
+          secureTextEntry={true} 
+          style={styles.sectionTextInput} 
+          onChangeText={(text) => this.setState({passwordInput : text})}
+        />
+        <View style={styles.sectionButtonInput}>
+          <Button  
+            color="#FFFFFF" 
+            onPress={ () => validateLoginInput(this.state) } 
+            title="Entrar" 
+          />
+        </View>
       </View>
-    </View>
     );
   }
 
