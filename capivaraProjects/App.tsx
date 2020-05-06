@@ -8,19 +8,20 @@
  * @format
  */
 
-import React from 'react';
+ import React from 'react';
+
 import {
   SafeAreaView,
   StyleSheet,
+  Text,
   ScrollView,
   View,
-  Text,
   StatusBar,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import  Login  from './views/Login';
+import  Login from './src/views/Login';
 
 declare const global: {HermesInternal: null | {}};
 
@@ -28,7 +29,7 @@ const App = () => {
   return (
       <View style={styles.container}>
         <View style={styles.sectionViewTitle}>
-          <Text style={styles.sectionTextTitle}> Bem-vindo (a) á Taqtile!</Text>
+          <Text style={styles.sectionTextTitle}> Bem-vindo(a) à Taqtile!</Text>
         </View>
         <Login/>
       </View>
