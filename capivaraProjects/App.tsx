@@ -13,9 +13,9 @@
 import {
   SafeAreaView,
   StyleSheet,
+  Text,
   ScrollView,
   View,
-  Text,
   StatusBar,
 } from 'react-native';
 
@@ -29,7 +29,7 @@ const App = () => {
   return (
       <View style={styles.container}>
         <View style={styles.sectionViewTitle}>
-          <Text style={styles.sectionTextTitle}> Bem-vindo (a) á Taqtile!</Text>
+          <Text style={styles.sectionTextTitle}> Bem-vindo(a) à Taqtile!</Text>
         </View>
         <Login/>
       </View>

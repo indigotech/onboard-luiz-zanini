@@ -16,9 +16,9 @@ interface LoginState {
 
 class Login extends Component<{}, LoginState>{
 
-  constructor(LoginProps:any){
+  constructor(props:any){
   
-    super(LoginProps);
+    super(props);
 
     this.state = {
       emailInput : "",
