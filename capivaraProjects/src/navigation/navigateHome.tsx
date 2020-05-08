@@ -2,7 +2,7 @@ import { Navigation } from "react-native-navigation"
 
 export const navigateHome = () => {
     
-    Navigation.push('Component2', {
+    Navigation.push('Login', {
         component: {
             name: 'Home',
             options: {

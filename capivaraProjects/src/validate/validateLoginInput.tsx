@@ -54,7 +54,7 @@ function validateLoginInput(inputLoginState: LoginState) {
 
     } else {
 
-        Alert.alert("Senha e usuario inválidos");
+        Alert.alert("Senha e usuário inválidos");
 
     }
 

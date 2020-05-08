@@ -8,6 +8,8 @@ import {
 
 import React, { Component } from 'react';
 import validateLoginInput from "../validate/validateLoginInput";
+import { getToken } from '../validate/getToken';
+import { navigateHome } from '../navigation/navigateHome';
 
 interface LoginState {
   emailInput: string,
@@ -24,6 +26,22 @@ class Login extends Component<{}, LoginState>{
       emailInput : "",
       passwordInput : "",
     };
+  }
+
+  componentDidMount(){
+    
+    getToken()
+      .then(result => {
+
+        console.log(result)
+        if(result === 'none')
+          return
+
+        navigateHome();
+
+      })
+      .catch(erro => console.log(erro));
+
   }
 
 

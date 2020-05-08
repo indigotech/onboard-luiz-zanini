@@ -6,6 +6,7 @@ import { Navigation } from "react-native-navigation";
 import App from './App';
 import {Home} from './src/views/Home';
 import {getToken} from './src/validate/getToken';
+import navigateHome from './src/navigation/navigateHome';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Home', () => Home);
@@ -14,6 +15,7 @@ Navigation.registerComponent('Home', () => Home);
 const loginPage = {
     root: {
         stack: {
+			id : 'Login',
             children: [
                 {
                     component: {
@@ -28,6 +30,7 @@ const loginPage = {
 const homePage = {
     root: {
         stack: {
+			id : 'Home',
             children: [
                 {
                     component: {
@@ -39,6 +42,14 @@ const homePage = {
    }
 };
 
+
+Home.options = {
+  topBar: {
+    title: {
+      text: 'Home',
+     }
+  }
+};
 
 
 
@@ -60,7 +71,8 @@ Navigation.events().registerAppLaunchedListener(() =>{
         }
       }
   })
+  
 
-  Navigation.setRoot( getToken() ? loginPage :homePage );
+  Navigation.setRoot( loginPage );
 
 });

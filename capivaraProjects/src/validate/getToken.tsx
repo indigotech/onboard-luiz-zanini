@@ -1,7 +1,7 @@
 
 import {AsyncStorage} from 'react-native';
 
-const Token = async () => {
+export const getToken = async () => {
 
     let userId = '';
 
@@ -16,31 +16,4 @@ const Token = async () => {
     }
     
     return userId;
-}
-
-export function getToken(){
-
-    return (
-        Token()
-            .then( (result) =>{
-
-                console.log(result);
-                
-                //Aqui eu posso mudar pra verificar se o servidor recebeu o token e esta correto, eu so nao implementei pq nao foi pedido
-                if(result.length == 0){
-                
-                    return false;
-                
-                }
-
-                return true;
-            
-            })
-            .catch( erro => {
-
-                console.log(erro)
-                return false;
-
-            })
-    );
 }

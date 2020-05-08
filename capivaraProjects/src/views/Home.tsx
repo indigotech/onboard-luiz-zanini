@@ -3,11 +3,12 @@ import {
     StyleSheet,
     View,
     Text,
-    Button
+    BackHandler
   } from 'react-native';
-  
-  import React, { Component } from 'react';
-  import validateLoginInput from "../validate/validateLoginInput";
+
+import React, { Component } from 'react';
+import { deleteToken } from '../validate/deleteToken';
+import { getToken } from '../validate/getToken';
  
 export class Home extends Component{
 
@@ -16,6 +17,13 @@ export class Home extends Component{
         super(props);
     
     }
+
+    // Se o usuário desfizer o Login
+    componentWillUnmount(){
+        
+        deleteToken();
+    }
+
     render(){
         return(
             <View style = {styles.sectionView} > 
