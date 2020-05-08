@@ -11,7 +11,7 @@ const reEmail: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(
 const rePassword: RegExp = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z$*&@#]{7,}$/;
 
 
-function validateLoginInput(inputLoginState: LoginState) {
+function validateLoginInput(inputLoginState: LoginState, acessHomePage : any ) {
 
     const email: string = inputLoginState.emailInput;
     const password: string = inputLoginState.passwordInput;
@@ -25,11 +25,19 @@ function validateLoginInput(inputLoginState: LoginState) {
     if (isPasswordValid && isEmailValid) {
 
         signIn(email, password)
-            .then( (result : any) => {
+            .then( async (result : any) => {
 
-                const token: string = result.data.login.token;
-                registerToken(token);                
+                try {
                 
+                    const token: string = result.data.login.token;
+                    await registerToken(token);                
+                    acessHomePage();
+                    
+                }catch{
+
+                    Alert.alert('Erro na criacao de token');
+
+                }
             })
             .catch( (erro : any) => {
 

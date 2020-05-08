@@ -8,6 +8,8 @@ import {
 
 import React, { Component } from 'react';
 import validateLoginInput from "../validate/validateLoginInput";
+import { getToken } from '../validate/getToken';
+import { Navigation } from 'react-native-navigation';
 
 interface LoginState {
   emailInput: string,
@@ -16,36 +18,70 @@ interface LoginState {
 
 class Login extends Component<{}, LoginState>{
 
-  constructor(props:any){
-  
+  constructor(props: any) {
+
     super(props);
 
     this.state = {
-      emailInput : "",
-      passwordInput : "",
+      emailInput: "",
+      passwordInput: ""
     };
   }
 
 
-  render(){
-    return(
+  private acessHomePage() {
+
+    Navigation.push('Login', {
+      component: {
+        id: 'Home',
+        name: 'Home',
+        options: {
+          topBar: {
+            title: {
+              text: 'Home'
+            },
+            backButton: {
+              testID: 'logOut'
+            }
+          }
+        }
+      }
+    });
+    
+  }
+
+  componentDidMount() {
+
+    getToken()
+      .then(result => {
+        if (result != 'none') {
+          this.acessHomePage()
+        }
+      })
+      .catch(erro => console.log(erro));
+
+  }
+
+
+  render() {
+    return (
       <View style={styles.sectionViewInput}>
         <Text style={styles.sectionText}>E-mail</Text>
-        <TextInput 
-          style={styles.sectionTextInput} 
-          onChangeText={(text) => this.setState({emailInput : text})}
+        <TextInput
+          style={styles.sectionTextInput}
+          onChangeText={(text) => this.setState({ emailInput: text })}
         />
         <Text style={styles.sectionText} >Senha</Text>
         <TextInput
-          secureTextEntry={true} 
-          style={styles.sectionTextInput} 
-          onChangeText={(text) => this.setState({passwordInput : text})}
+          secureTextEntry={true}
+          style={styles.sectionTextInput}
+          onChangeText={(text) => this.setState({ passwordInput: text })}
         />
         <View style={styles.sectionButtonInput}>
-          <Button  
-            color="#FFFFFF" 
-            onPress={ () => validateLoginInput(this.state) } 
-            title="Entrar" 
+          <Button
+            color="#FFFFFF"
+            onPress={() => { validateLoginInput(this.state, this.acessHomePage )}}
+            title="Entrar"
           />
         </View>
       </View>
@@ -67,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   sectionButtonInput: {
-    backgroundColor :"#8A2BE2",
+    backgroundColor: "#8A2BE2",
     borderRadius: 15,
     height: 45,
     justifyContent: "center",

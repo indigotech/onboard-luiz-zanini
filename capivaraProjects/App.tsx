@@ -28,6 +28,13 @@ const App = () => {
       </View>
   );
 };
+App.options = {
+  topBar: {
+    title: {
+      text: 'Login',
+     }
+  }
+};
 
 const styles = StyleSheet.create({
   scrollView: {

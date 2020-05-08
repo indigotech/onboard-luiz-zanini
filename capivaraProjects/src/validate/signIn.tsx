@@ -24,4 +24,4 @@ function signIn(email: string, password : string){
 
 }
 
-export default signIn;
+export default signIn; 
