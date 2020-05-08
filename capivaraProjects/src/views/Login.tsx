@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  Button
+  Button,
+  ActivityIndicator
 } from 'react-native';
 
 import React, { Component } from 'react';
@@ -14,6 +15,7 @@ import { Navigation } from 'react-native-navigation';
 interface LoginState {
   emailInput: string,
   passwordInput: string
+  pressButton: boolean
 }
 
 class Login extends React.Component<{}, LoginState>{
@@ -24,7 +26,8 @@ class Login extends React.Component<{}, LoginState>{
 
     this.state = {
       emailInput: "",
-      passwordInput: ""
+      passwordInput: "",
+      pressButton: false
     };
 
   }
@@ -79,11 +82,23 @@ class Login extends React.Component<{}, LoginState>{
           onChangeText={(text) => this.setState({ passwordInput: text })}
         />
         <View style={styles.sectionButtonInput}>
+          { this.state.pressButton ? 
+          <ActivityIndicator size="small" color="#0000ff"/> :
           <Button
             color="#FFFFFF"
-            onPress={() => { validateLoginInput(this.state, this.acessHomePage )}}
-            title="Entrar"
-          />
+            onPress={() => { 
+
+              this.setState({pressButton : true});
+              validateLoginInput(this.state, this.acessHomePage)
+              
+              setTimeout(() => { 
+                this.setState({pressButton : false});
+              }, 1000);
+
+            }}
+            title= 'login'
+          >
+          </Button>}
         </View>
       </View>
     );

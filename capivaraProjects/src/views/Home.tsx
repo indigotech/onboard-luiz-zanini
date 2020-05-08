@@ -19,6 +19,7 @@ export class Home extends React.Component {
 
         super(props);
     }
+<<<<<<< HEAD
 
     private async logOut() {
 
@@ -69,6 +70,14 @@ export class Home extends React.Component {
                     </View>
                 </View>
             </ScrollView>
+=======
+    
+    render(){
+        return(
+            <View style = {styles.sectionView} >
+                <Text style = {styles.sectionText}>Bem vindo usuário!</Text>
+            </View>
+>>>>>>> Adicionando load do botao
         );
     }
 }
