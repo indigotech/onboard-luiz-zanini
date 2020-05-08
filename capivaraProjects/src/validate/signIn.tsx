@@ -1,4 +1,4 @@
-import client from '../apolloConfig/apollo';
+import {client} from '../apolloConfig/apollo';
 import { gql } from 'apollo-boost';
 
 const mutateLogin = gql`
