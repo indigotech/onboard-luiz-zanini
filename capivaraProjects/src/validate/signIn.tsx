@@ -17,10 +17,7 @@ function signIn(email: string, password : string){
         client.mutate({
             mutation: mutateLogin,
             variables : {
-                data : {
-                    "email" : email,
-                    "password" : password
-                }
+                data : {email, password}
             }
         })
     )
