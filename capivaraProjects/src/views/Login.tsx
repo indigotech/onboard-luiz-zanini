@@ -33,10 +33,12 @@ class Login extends Component<{}, LoginState>{
     getToken()
       .then(result => {
 
-        console.log(result)
-        if(result === 'none')
+        if(result === 'none'){
+
           return
 
+        }
+      
         navigateHome();
 
       })
@@ -62,7 +64,7 @@ class Login extends Component<{}, LoginState>{
         <View style={styles.sectionButtonInput}>
           <Button  
             color="#FFFFFF"
-            onPress={ () => validateLoginInput(this.state, ) } 
+            onPress={ () => validateLoginInput(this.state) } 
             title="Entrar" 
           />
         </View>
