@@ -27,16 +27,14 @@ function validateLoginInput(inputLoginState: LoginState) {
         signIn(email, password)
             .then( (result : any) => {
 
-                console.log('oi');
                 const token: string = result.data.login.token;
-                registerToken(token);
-                
+                registerToken(token);                
                 
             })
             .catch( (erro : any) => {
 
                 // Eu acredito estar feio mas ele pediu uma mensagem do que eu recebi do server , então seria isso?
-                const typeError: string = JSON.stringify(erro.graphQLErrors);
+                const typeError: string = JSON.stringify(erro.graphQLErrors[0].message);
                 Alert.alert(typeError);
 
             })
