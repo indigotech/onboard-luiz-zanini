@@ -1,7 +1,7 @@
 import { Alert } from 'react-native';
-import validateServer from "./validateServer";
-import { registerToken } from './registerToken';
+import signIn from "./signIn";
 import { navigateHome } from '../navigation/navigateHome';
+import { registerToken } from './registerToken';
 
 interface LoginState {
     emailInput: string,
@@ -14,9 +14,6 @@ const rePassword: RegExp = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z$*&@#]{7,}$/;
 
 function validateLoginInput(inputLoginState: LoginState) {
 
-    //Caso seja necessario logar, fiz uns testes e funcionou fechei e abrir o app e deu baum
-    //loginToken();
-
     const email: string = inputLoginState.emailInput;
     const password: string = inputLoginState.passwordInput;
 
@@ -28,15 +25,17 @@ function validateLoginInput(inputLoginState: LoginState) {
 
     if (isPasswordValid && isEmailValid) {
 
-        validateServer(email, password)
-            .then(result => {
+        signIn(email, password)
+            .then( (result : any) => {
 
+                console.log('oi');
                 const token: string = result.data.login.token;
                 registerToken(token);
                 navigateHome();
-
+                
+                
             })
-            .catch((erro) => {
+            .catch( (erro : any) => {
 
                 // Eu acredito estar feio mas ele pediu uma mensagem do que eu recebi do server , então seria isso?
                 const typeError: string = JSON.stringify(erro.graphQLErrors);
