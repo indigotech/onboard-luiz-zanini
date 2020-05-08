@@ -9,6 +9,7 @@ import {
 import React, { Component } from 'react';
 import { deleteToken } from '../validate/deleteToken';
 import { getToken } from '../validate/getToken';
+import { Navigation } from "react-native-navigation"
  
 export class Home extends Component{
 
@@ -17,13 +18,8 @@ export class Home extends Component{
         super(props);
     
     }
-
+      
     // Se o usuário desfizer o Login
-    componentWillUnmount(){
-        
-        deleteToken();
-    }
-
     render(){
         return(
             <View style = {styles.sectionView} > 

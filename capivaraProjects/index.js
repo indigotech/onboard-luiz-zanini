@@ -6,7 +6,6 @@ import { Navigation } from "react-native-navigation";
 import App from './App';
 import {Home} from './src/views/Home';
 import {getToken} from './src/validate/getToken';
-import navigateHome from './src/navigation/navigateHome';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Home', () => Home);
@@ -50,8 +49,6 @@ Home.options = {
      }
   }
 };
-
-
 
 Navigation.events().registerAppLaunchedListener(() =>{
 
