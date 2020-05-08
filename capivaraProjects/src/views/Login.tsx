@@ -23,9 +23,9 @@ class Login extends Component<{}, LoginState>{
     this.state = {
       emailInput : "",
       passwordInput : "",
-    }
-    
+    };
   }
+
 
   render(){
     return(

@@ -7,23 +7,16 @@
  *
  * @format
  */
-
- import React from 'react';
-
+import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
-  ScrollView,
   View,
-  StatusBar,
 } from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import  Login from './src/views/Login';
 
-declare const global: {HermesInternal: null | {}};
+
 
 const App = () => {
   return (
