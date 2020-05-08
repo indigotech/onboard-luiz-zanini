@@ -44,7 +44,6 @@ function validateLoginInput(inputLoginState: LoginState, acessHomePage : any) {
 
                 const typeError: string = JSON.stringify(erro.graphQLErrors[0].message);
                 Alert.alert(typeError);
-                return false;
             
             })
 
