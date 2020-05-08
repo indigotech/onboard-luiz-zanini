@@ -43,8 +43,8 @@ class Login extends Component<{}, LoginState>{
         />
         <View style={styles.sectionButtonInput}>
           <Button  
-            color="#FFFFFF" 
-            onPress={ () => validateLoginInput(this.state) } 
+            color="#FFFFFF"
+            onPress={ () => validateLoginInput(this.state, ) } 
             title="Entrar" 
           />
         </View>
