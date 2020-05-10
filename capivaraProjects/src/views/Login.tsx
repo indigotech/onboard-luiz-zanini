@@ -104,12 +104,10 @@ class Login extends React.Component<{}, LoginState>{
           style={ this.inputStyle(this.state.isEmailValid) }
           onChangeText={(text) => {
             
-            this.setState({ emailInput: text })
+            this.setState({ emailInput: text });
             
             if(!this.state.isEmailValid){
-
-              this.setState({ isEmailValid : this.validate.Email(text) })
-              
+              this.setState({ isEmailValid : this.validate.Email(text) });
             }
           
           }}
@@ -120,12 +118,10 @@ class Login extends React.Component<{}, LoginState>{
           style={ this.inputStyle(this.state.isPassworValid) }
           onChangeText={(text) => {
             
-            this.setState({ passwordInput: text })
+            this.setState({ passwordInput: text });
 
             if(!this.state.isPassworValid){
-
-              this.setState({ isPassworValid : this.validate.Password(text) })
-              
+              this.setState({ isPassworValid : this.validate.Password(text) });
             }
           
           }}
