@@ -16,7 +16,7 @@ interface LoginState {
   passwordInput: string
 }
 
-class Login extends Component<{}, LoginState>{
+class Login extends React.Component<{}, LoginState>{
 
   constructor(props: any) {
 
@@ -26,6 +26,7 @@ class Login extends Component<{}, LoginState>{
       emailInput: "",
       passwordInput: ""
     };
+
   }
 
 
@@ -41,7 +42,7 @@ class Login extends Component<{}, LoginState>{
               text: 'Home'
             },
             backButton: {
-              testID: 'logOut'
+              visible : false
             }
           }
         }
