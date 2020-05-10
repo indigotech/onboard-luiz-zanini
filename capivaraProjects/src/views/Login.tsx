@@ -11,27 +11,56 @@ import React, { Component } from 'react';
 import validateLoginInput from "../validate/validateLoginInput";
 import { getToken } from '../validate/getToken';
 import { Navigation } from 'react-native-navigation';
+import {validateRegex} from '../validate/regexValidation';
 
 interface LoginState {
-  emailInput: string,
-  passwordInput: string
-  pressButton: boolean
+  emailInput : string,
+  passwordInput : string,
+  pressButton : boolean,
+  isEmailValid : boolean,
+  isPassworValid : boolean,
 }
 
 class Login extends React.Component<{}, LoginState>{
+
+  validate: validateRegex;
 
   constructor(props: any) {
 
     super(props);
 
+    this.validate = new validateRegex();
     this.state = {
       emailInput: "",
       passwordInput: "",
-      pressButton: false
+      pressButton: false,
+      isEmailValid: true,
+      isPassworValid: true,
     };
 
   }
 
+  inputStyle(isValidStyle : boolean) : any{
+
+    if(isValidStyle){
+        return {
+            height: 40,
+            borderColor: '#C0C0C0',
+            borderWidth: 2,
+            borderRadius: 15,
+            marginBottom: 20, 
+        }
+    }
+
+    return {
+      height: 40,
+      borderColor: '#ff9090',
+      borderWidth: 2,
+      borderRadius: 15,
+      marginBottom: 20,
+    }
+    
+  }
 
   private acessHomePage() {
 
@@ -72,14 +101,34 @@ class Login extends React.Component<{}, LoginState>{
       <View style={styles.sectionViewInput}>
         <Text style={styles.sectionText}>E-mail</Text>
         <TextInput
-          style={styles.sectionTextInput}
-          onChangeText={(text) => this.setState({ emailInput: text })}
+          style={ this.inputStyle(this.state.isEmailValid) }
+          onChangeText={(text) => {
+            
+            this.setState({ emailInput: text })
+            
+            if(!this.state.isEmailValid){
+
+              this.setState({ isEmailValid : this.validate.Email(text) })
+              
+            }
+          
+          }}
         />
         <Text style={styles.sectionText} >Senha</Text>
         <TextInput
           secureTextEntry={true}
-          style={styles.sectionTextInput}
-          onChangeText={(text) => this.setState({ passwordInput: text })}
+          style={ this.inputStyle(this.state.isPassworValid) }
+          onChangeText={(text) => {
+            
+            this.setState({ passwordInput: text })
+
+            if(!this.state.isPassworValid){
+
+              this.setState({ isPassworValid : this.validate.Password(text) })
+              
+            }
+          
+          }}
         />
         <View style={styles.sectionButtonInput}>
           { this.state.pressButton ? 
@@ -89,8 +138,13 @@ class Login extends React.Component<{}, LoginState>{
             onPress={() => { 
 
               this.setState({pressButton : true});
-              validateLoginInput(this.state, this.acessHomePage)
+              const validacao = validateLoginInput(this.state, this.acessHomePage)
               
+              this.setState({
+                isEmailValid : validacao.isEmailValid,
+                isPassworValid : validacao.isPasswordValid,
+              });
+
               setTimeout(() => { 
                 this.setState({pressButton : false});
               }, 1000);
@@ -112,7 +166,7 @@ const styles = StyleSheet.create({
     borderColor: "#C0C0C0",
     borderWidth: 2,
     borderRadius: 15,
-    marginBottom: 20
+    marginBottom: 20,
   },
   sectionViewInput: {
     padding: "5%",
