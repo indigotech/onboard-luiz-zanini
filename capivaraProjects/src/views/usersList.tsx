@@ -6,7 +6,7 @@ import {
     Image,
   } from 'react-native';
 
-const usuarios : listUser[] = [
+const usuarios : ListUser[] = [
     {email : 'leandro@gmail.com' , name : 'Leandro'},
     {email : 'leandro@gmail.com' , name : 'Leandro'},
     {email : 'leandro@gmail.com' , name : 'Leandro'},
@@ -19,7 +19,7 @@ const usuarios : listUser[] = [
     {email : 'leandro@gmail.com' , name : 'Leandro'},
   ]
  
-interface listUser {
+interface ListUser {
     name : string,
     email : string,
 }
@@ -38,20 +38,20 @@ export class UserList extends React.Component{
         return(
             <View style ={styles.sectionContainer}>
                 <FlatList
-                    data = {usuarios }
-                    renderItem= {this.RenderItems}
+                    data = {usuarios}
+                    renderItem= {this.renderItems}
                     keyExtractor = {(item, index) => 'key'+index}
                 />
             </View>
         );
     };
 
-    private RenderItems = ( item : listUser) => {
+    private renderItems = ( {item} : any) => (
         <View style = {styles.sectionUsuario} >
             <Text style={styles.textName}>{item.name}</Text>
             <Text style={styles.textEmail}>{item.email}</Text>
         </View>
-    }
+    )
 }
 
 const styles = StyleSheet.create({
