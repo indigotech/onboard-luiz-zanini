@@ -6,7 +6,7 @@ import {
     Image,
   } from 'react-native';
 
-const usuarios : any = [
+const usuarios : listUser[] = [
     {email : 'leandro@gmail.com' , name : 'Leandro'},
     {email : 'leandro@gmail.com' , name : 'Leandro'},
     {email : 'leandro@gmail.com' , name : 'Leandro'},
@@ -18,10 +18,15 @@ const usuarios : any = [
     {email : 'leandro@gmail.com' , name : 'Leandro'},
     {email : 'leandro@gmail.com' , name : 'Leandro'},
   ]
-  
+ 
+interface listUser {
+    name : string,
+    email : string,
+}
+
 import React, { Component } from 'react';
 
-export class UserList extends React.Component<{},{}>{
+export class UserList extends React.Component{
 
     constructor(props : any){
         
@@ -33,18 +38,20 @@ export class UserList extends React.Component<{},{}>{
         return(
             <View style ={styles.sectionContainer}>
                 <FlatList
-                    data = {usuarios}
-                    renderItem={ ({ item }) => (
-                        <View style = {styles.sectionUsuario} >
-                            <Text style={styles.textName}>{item.name}</Text>
-                            <Text style={styles.textEmail}>{item.email}</Text>
-                        </View>
-                    )}
+                    data = {usuarios }
+                    renderItem= {this.RenderItems}
                     keyExtractor = {(item, index) => 'key'+index}
                 />
             </View>
         );
     };
+
+    private RenderItems = ( item : listUser) => {
+        <View style = {styles.sectionUsuario} >
+            <Text style={styles.textName}>{item.name}</Text>
+            <Text style={styles.textEmail}>{item.email}</Text>
+        </View>
+    }
 }
 
 const styles = StyleSheet.create({
