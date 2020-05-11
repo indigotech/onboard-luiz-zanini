@@ -11,33 +11,33 @@ Navigation.registerComponent('Home', () => Home);
 
 
 const loginPage = {
-    root: {
-        stack: {
-			id : 'Login',
-            children: [
-                {
-                    component: {
-                    name: 'Login'
-                    }
-                }  
-            ]
+  root: {
+    stack: {
+      id: 'Login',
+      children: [
+        {
+          component: {
+            name: 'Login'
+          }
         }
-   }
+      ]
+    }
+  }
 };
 
 const homePage = {
-    root: {
-        stack: {
-			id : 'Home',
-            children: [
-                {
-                    component: {
-                    name: 'Home'
-                    }
-                }  
-            ]
+  root: {
+    stack: {
+      id: 'Home',
+      children: [
+        {
+          component: {
+            name: 'Home'
+          }
         }
-   }
+      ]
+    }
+  }
 };
 
 
@@ -45,30 +45,30 @@ Home.options = {
   topBar: {
     title: {
       text: 'Home',
-     }
+    }
   }
 };
 
-Navigation.events().registerAppLaunchedListener(() =>{
+Navigation.events().registerAppLaunchedListener(() => {
 
-    Navigation.setDefaultOptions({
-      statusBar: {
-        backgroundColor: '#4d089a'
+  Navigation.setDefaultOptions({
+    statusBar: {
+      backgroundColor: '#4d089a'
+    },
+    topBar: {
+      title: {
+        color: 'white'
       },
-      topBar: {
-        title: {
-          color: 'white'
-        },
-        backButton: {
-          color: 'white'
-        },
-        background: {
-          color: '#8A2BE2'
-        }
+      backButton: {
+        color: 'white'
+      },
+      background: {
+        color: '#8A2BE2'
       }
+    }
   })
-  
 
-  Navigation.setRoot( loginPage );
+
+  Navigation.setRoot(loginPage);
 
 });
