@@ -12,6 +12,7 @@ import {
 import React, { Component } from 'react';
 import { deleteToken } from '../storage/deleteToken';
 import { Navigation } from "react-native-navigation";
+import { UserList } from './usersList';
 
 export class Home extends React.Component {
 
@@ -65,7 +66,7 @@ export class Home extends React.Component {
                         </View>
                     </View>
                     <View style={styles.sectionViewText} >
-                        <Text style={styles.sectionText}>Bem vindo usuário!</Text>
+                        <UserList/>
                     </View>
                 </View>
             </ScrollView>
@@ -77,6 +78,7 @@ export class Home extends React.Component {
 const styles = StyleSheet.create({
     sectionContaineir: {
         flex: 1,
+        backgroundColor: '#dcdcdc',
     },
     sectionViewText: {
         flex: 0.9,
