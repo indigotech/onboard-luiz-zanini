@@ -5,7 +5,6 @@
 import { Navigation } from "react-native-navigation";
 import App from './App';
 import {Home} from './src/views/Home';
-import {getToken} from './src/validate/getToken';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Home', () => Home);

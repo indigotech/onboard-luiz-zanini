@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import { deleteToken } from '../validate/deleteToken';
+import { deleteToken } from '../storage/deleteToken';
 import { Navigation } from "react-native-navigation";
 
 export class Home extends React.Component {
@@ -19,7 +19,6 @@ export class Home extends React.Component {
 
         super(props);
     }
-<<<<<<< HEAD
 
     private async logOut() {
 
@@ -70,14 +69,6 @@ export class Home extends React.Component {
                     </View>
                 </View>
             </ScrollView>
-=======
-    
-    render(){
-        return(
-            <View style = {styles.sectionView} >
-                <Text style = {styles.sectionText}>Bem vindo usuário!</Text>
-            </View>
->>>>>>> Adicionando load do botao
         );
     }
 }

@@ -4,21 +4,28 @@ import {
   View,
   Text,
   Button,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 
 import React, { Component } from 'react';
-import validateLoginInput from "../validate/validateLoginInput";
-import { getToken } from '../validate/getToken';
+import { validateLoginInput } from "../validate/validateLoginInput";
+import { getToken } from '../storage/getToken';
 import { Navigation } from 'react-native-navigation';
-import {validateRegex} from '../validate/regexValidation';
+import { validateRegex } from '../validate/regexValidation';
+import {signIn} from '../apolloConfig/signIn';
 
 interface LoginState {
-  emailInput : string,
-  passwordInput : string,
-  pressButton : boolean,
-  isEmailValid : boolean,
-  isPassworValid : boolean,
+  emailInput: string,
+  passwordInput: string,
+  loading: boolean,
+  isEmailValid: boolean,
+  isPasswordValid: boolean,
+}
+
+interface loginValidate {
+  isEmailValid: boolean,
+  isPasswordValid: boolean
 }
 
 class Login extends React.Component<{}, LoginState>{
@@ -33,23 +40,54 @@ class Login extends React.Component<{}, LoginState>{
     this.state = {
       emailInput: "",
       passwordInput: "",
-      pressButton: false,
+      loading: false,
       isEmailValid: true,
-      isPassworValid: true,
+      isPasswordValid: true,
     };
 
   }
 
-  inputStyle(isValidStyle : boolean) : any{
+  render() {
+    return (
+      <View style={styles.sectionViewInput}>
+        <Text style={styles.sectionText}>E-mail</Text>
+        <TextInput
+          style={this.inputStyle('Email')}
+          onChangeText={this.changeTextInputEmail}
+        />
+        <Text style={styles.sectionText} >Senha</Text>
+        <TextInput
+          secureTextEntry={true}
+          style={this.inputStyle('Password')}
+          onChangeText={this.changeTextInputPassword}
+        />
+        <View style={styles.sectionButtonInput}>
+            {this.state.loading ?
+            <ActivityIndicator size="small" color="#0000ff" /> :
+            <Button
+              color="#FFFFFF"
+              onPress={this.HandleButtonTap}
+              title='login'
+            >
+            </Button>}
+        </View>
+      </View>
+    );
+  }
 
-    if(isValidStyle){
-        return {
-            height: 40,
-            borderColor: '#C0C0C0',
-            borderWidth: 2,
-            borderRadius: 15,
-            marginBottom: 20, 
-        }
+  private inputStyle(typeOfInput : string): any {
+
+    let isValidStyle : boolean;
+    typeOfInput == 'Email' ? isValidStyle = this.state.isEmailValid : isValidStyle = this.state.isPasswordValid;
+
+    if (isValidStyle) {
+      return {
+        height: 40,
+        borderColor: '#C0C0C0',
+        borderWidth: 2,
+        borderRadius: 15,
+        marginBottom: 20,
+      }
     }
 
     return {
@@ -59,7 +97,7 @@ class Login extends React.Component<{}, LoginState>{
       borderRadius: 15,
       marginBottom: 20,
     }
-    
+
   }
 
   private acessHomePage() {
@@ -80,7 +118,53 @@ class Login extends React.Component<{}, LoginState>{
         }
       }
     });
+
+  }
+
+  private HandleButtonTap = async () => {
+
+    const validacaoInput : loginValidate =  validateLoginInput(this.state, this.acessHomePage);
+
+    this.setState({
+      isEmailValid: validacaoInput.isEmailValid,
+      isPasswordValid: validacaoInput.isPasswordValid,
+    });
+
+    if(!validacaoInput.isEmailValid || !validacaoInput.isPasswordValid){
+      return;
+    }
+
+    try{
+
+      this.setState({ loading: true });  
+      await signIn(this.state.emailInput, this.state.passwordInput);
+      this.acessHomePage();
     
+    }catch(error){
+      
+      const messageError =  JSON.stringify(error.graphQLErrors[0].message) || "Não foi possivel conectar ao servidor";
+      Alert.alert(messageError);
+
+    }finally{
+      this.setState({ loading: false });
+    }
+
+  }
+
+  private changeTextInputEmail = (text) =>{
+    
+    this.setState({ emailInput: text });
+    if (!this.state.isEmailValid) {
+      this.setState({ isEmailValid: this.validate.Email(text) });
+    }
+  }
+
+  private changeTextInputPassword = (text) =>{
+    
+    this.setState({ passwordInput: text });
+    if (!this.state.isPasswordValid) {
+      this.setState({ isPasswordValid: this.validate.Password(text) });
+    }
   }
 
   componentDidMount() {
@@ -91,69 +175,9 @@ class Login extends React.Component<{}, LoginState>{
           this.acessHomePage()
         }
       })
-      .catch(erro => console.log(erro));
+      .catch(error => console.log(error));
 
   }
-
-
-  render() {
-    return (
-      <View style={styles.sectionViewInput}>
-        <Text style={styles.sectionText}>E-mail</Text>
-        <TextInput
-          style={ this.inputStyle(this.state.isEmailValid) }
-          onChangeText={(text) => {
-            
-            this.setState({ emailInput: text });
-            
-            if(!this.state.isEmailValid){
-              this.setState({ isEmailValid : this.validate.Email(text) });
-            }
-          
-          }}
-        />
-        <Text style={styles.sectionText} >Senha</Text>
-        <TextInput
-          secureTextEntry={true}
-          style={ this.inputStyle(this.state.isPassworValid) }
-          onChangeText={(text) => {
-            
-            this.setState({ passwordInput: text });
-
-            if(!this.state.isPassworValid){
-              this.setState({ isPassworValid : this.validate.Password(text) });
-            }
-          
-          }}
-        />
-        <View style={styles.sectionButtonInput}>
-          { this.state.pressButton ? 
-          <ActivityIndicator size="small" color="#0000ff"/> :
-          <Button
-            color="#FFFFFF"
-            onPress={() => { 
-
-              this.setState({pressButton : true});
-              const validacao = validateLoginInput(this.state, this.acessHomePage)
-              
-              this.setState({
-                isEmailValid : validacao.isEmailValid,
-                isPassworValid : validacao.isPasswordValid,
-              });
-
-              setTimeout(() => { 
-                this.setState({pressButton : false});
-              }, 1000);
-
-            }}
-            title= 'login'
-          >
-          </Button>}
-        </View>
-      </View>
-    );
-  }
-
 };
 
 const styles = StyleSheet.create({
