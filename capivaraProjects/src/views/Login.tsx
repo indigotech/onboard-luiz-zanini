@@ -66,7 +66,7 @@ class Login extends React.Component<{}, LoginState>{
             <ActivityIndicator size="small" color="#0000ff" /> :
             <Button
               color="#FFFFFF"
-              onPress={this.HandleButtonTap}
+              onPress={this.handleButtonTap}
               title='login'
             >
             </Button>}
@@ -121,7 +121,7 @@ class Login extends React.Component<{}, LoginState>{
 
   }
 
-  private HandleButtonTap = async () => {
+  private handleButtonTap = async () => {
 
     const validacaoInput : loginValidate =  validateLoginInput(this.state, this.acessHomePage);
 
