@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
     sectionContainer: {
         padding: "5%",
         flex: 1,
-        backgroundColor: '#dcdcdc'
     },
     textName :{
         fontWeight: 'bold',
