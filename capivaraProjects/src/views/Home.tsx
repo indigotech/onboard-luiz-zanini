@@ -20,7 +20,7 @@ export class Home extends React.Component {
         super(props);
     }
 
-    async logOut() {
+    private async logOut() {
 
         try {
 
