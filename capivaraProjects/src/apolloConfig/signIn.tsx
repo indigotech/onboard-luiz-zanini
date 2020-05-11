@@ -23,8 +23,6 @@ const mutateLogin = gql`
 `
 export async function signIn(email: string, password : string): Promise<void>{
 
-    
-
     const dados = await client.mutate<mutaType>({
         mutation: mutateLogin,
         variables : {
