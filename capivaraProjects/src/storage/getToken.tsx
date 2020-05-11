@@ -1,7 +1,7 @@
 
 import {AsyncStorage} from 'react-native';
 
-export const getToken = async () => {
+export async function getToken() : Promise<string> {
 
     let userId = '';
 

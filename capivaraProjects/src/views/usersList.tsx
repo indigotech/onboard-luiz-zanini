@@ -4,47 +4,71 @@ import {
     Text,
     FlatList,
     Image,
-  } from 'react-native';
+    Alert,
+} from 'react-native';
 
-const usuarios : ListUser[] = [
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-  ]
- 
+import React, { Component } from 'react';
+import { getUserList } from '../apolloConfig/getUserList';
+
 interface ListUser {
+    id : number,
     name : string,
     email : string,
 }
 
-import React, { Component } from 'react';
+interface UsersListState{
+    usuarios : ListUser[]
+}
 
-export class UserList extends React.Component{
+export class UserList extends React.Component<{},UsersListState>{
 
     constructor(props : any){
         
         super(props);
 
+        this.state = {
+            usuarios : []
+        }
     }
 
     render(){
         return(
             <View style ={styles.sectionContainer}>
-                <FlatList
-                    data = {usuarios}
-                    renderItem= {this.renderItems}
-                    keyExtractor = {(item, index) => 'key'+index}
-                />
+                {this.componentWillMount()}
             </View>
         );
     };
+
+    componentWillMount(){
+        
+        this.getUsers();
+
+        if(this.state.usuarios == []){
+            <View style = {styles.sectionUsuario} >
+                <Text style={styles.textName}>Erro com a conexão do servidor</Text>
+            </View>
+        }
+
+        return (
+            <FlatList
+                data = { this.state.usuarios} 
+                renderItem= {this.renderItems}
+                keyExtractor = {(item) => 'key'+item.id}
+            />
+        )
+    }
+
+    private async getUsers() { 
+        
+        try {
+            const dados  = await getUserList();
+            this.setState({usuarios : dados})
+        }catch(error){
+            Alert.alert('erro no carregamento dos usuários');
+            return error;
+        }
+    
+    }
 
     private renderItems = ( {item} : any) => (
         <View style = {styles.sectionUsuario} >
