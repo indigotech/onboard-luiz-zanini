@@ -7,7 +7,7 @@ import {
     Alert,
 } from 'react-native';
 
-import React, { Component } from 'react';
+import React, { Component, useDebugValue } from 'react';
 import { getUserList } from '../apolloConfig/getUserList';
 
 interface ListUser {
@@ -29,43 +29,39 @@ export class UserList extends React.Component<{},UsersListState>{
         this.state = {
             usuarios : []
         }
+
     }
 
     render(){
         return(
             <View style ={styles.sectionContainer}>
-                {this.componentWillMount()}
+                <FlatList
+                    data = {this.state.usuarios} 
+                    renderItem= {this.renderItems}
+                    keyExtractor = {(item) => 'key'+item.id}
+                />
             </View>
         );
     };
 
-    componentWillMount(){
-        
-        this.getUsers();
+    componentDidMount(){
+        this.getUsers()
+            .then((result : ListUser[]) => this.setState({usuarios : result}) )
+            .catch((error) => this.setState({usuarios : error}) )
+    }   
 
-        if(this.state.usuarios == []){
-            <View style = {styles.sectionUsuario} >
-                <Text style={styles.textName}>Erro com a conexão do servidor</Text>
-            </View>
-        }
-
-        return (
-            <FlatList
-                data = { this.state.usuarios} 
-                renderItem= {this.renderItems}
-                keyExtractor = {(item) => 'key'+item.id}
-            />
-        )
-    }
-
-    private async getUsers() { 
+    private async getUsers() : Promise<ListUser[]>{ 
         
         try {
-            const dados  = await getUserList();
-            this.setState({usuarios : dados})
+            
+            const dados : ListUser[] = await getUserList();
+            return dados;
+
         }catch(error){
+            
             Alert.alert('erro no carregamento dos usuários');
-            return error;
+            return [];
+        
         }
     
     }
