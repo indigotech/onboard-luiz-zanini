@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import React, { Component } from 'react';
-import { deleteToken } from '../validate/deleteToken';
+import { deleteToken } from '../storage/deleteToken';
 import { Navigation } from "react-native-navigation";
 
 export class Home extends React.Component {
