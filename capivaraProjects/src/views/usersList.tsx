@@ -5,6 +5,7 @@ import {
     FlatList,
     Image,
     Alert,
+    Button,
 } from 'react-native';
 
 import React, { Component, useDebugValue } from 'react';
@@ -45,6 +46,7 @@ export class UserList extends React.Component<{},UsersListState>{
                     data = {this.state.users} 
                     renderItem= {this.renderItems}
                     keyExtractor = {(item) => 'key'+item.id}
+                    extraData = {this.state.users}
                 />
                 }
             </View>
@@ -61,6 +63,13 @@ export class UserList extends React.Component<{},UsersListState>{
         
         const data : ListUser = await getUserList();
         return data;
+
+    }
+
+    private renderMoreItems = async () => {
+
+        const newDataUsers :  ListUser = await this.getUsers();
+        this.setState({ users : this.state.users.concat(newDataUsers)});
 
     }
 
@@ -88,6 +97,16 @@ const styles = StyleSheet.create({
         color: '#BCBEC0',
         fontStyle: 'italic',
         marginTop: 20
+    },
+    viewButtonLoad :{
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    ButtonLoad :{
+        marginTop: 10,
+        width: 120,
+        backgroundColor: "#8A2BE2",
+        borderRadius: 7,
     },
     sectionUsuario : {
         padding: '5%',

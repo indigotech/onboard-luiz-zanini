@@ -11,13 +11,13 @@ type ListUser = User[];
 
 interface QueryListUsers {
     users : {
-        nodes : User[]
+        nodes : ListUser
     }
 }
 
 const queryUsers = gql`
-    query users {
-        users(pageInfo : {offset : 0, limit : 10}){
+    query users($pageInfo: PageInputType){
+        users(pageInfo : $pageInfo){
         nodes{
             id
             name
@@ -45,9 +45,7 @@ export async function getUserList() : Promise<ListUser> {
     const query = await client.query<QueryListUsers>({
         query: queryUsers
     })
-
-    console.log(query.data?.users.nodes);
-
+    
     return query.data?.users.nodes;
 
 }
