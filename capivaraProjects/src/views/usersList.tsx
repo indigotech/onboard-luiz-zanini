@@ -10,14 +10,17 @@ import {
 import React, { Component, useDebugValue } from 'react';
 import { getUserList } from '../apolloConfig/getUserList';
 
-interface ListUser {
+interface User {
     id : number,
     name : string,
     email : string,
 }
 
+type ListUser = User[];
+
 interface UsersListState{
-    usuarios : ListUser[]
+    users : ListUser,
+    errorData : boolean
 }
 
 export class UserList extends React.Component<{},UsersListState>{
@@ -27,7 +30,8 @@ export class UserList extends React.Component<{},UsersListState>{
         super(props);
 
         this.state = {
-            usuarios : []
+            users : [],
+            errorData : false,
         }
 
     }
@@ -35,35 +39,29 @@ export class UserList extends React.Component<{},UsersListState>{
     render(){
         return(
             <View style ={styles.sectionContainer}>
+                {this.state.errorData ? 
+                <Text> Falha no carregamento dos dados.</Text> :
                 <FlatList
-                    data = {this.state.usuarios} 
+                    data = {this.state.users} 
                     renderItem= {this.renderItems}
                     keyExtractor = {(item) => 'key'+item.id}
                 />
+                }
             </View>
         );
     };
 
     componentDidMount(){
         this.getUsers()
-            .then((result : ListUser[]) => this.setState({usuarios : result}) )
-            .catch((error) => this.setState({usuarios : error}) )
+            .then((result : ListUser) => this.setState({users : result}) )
+            .catch(() => this.setState({errorData : true}) )
     }   
 
-    private async getUsers() : Promise<ListUser[]>{ 
+    private async getUsers() : Promise<ListUser>{ 
         
-        try {
-            
-            const dados : ListUser[] = await getUserList();
-            return dados;
+        const data : ListUser = await getUserList();
+        return data;
 
-        }catch(error){
-            
-            Alert.alert('erro no carregamento dos usuários');
-            return [];
-        
-        }
-    
     }
 
     private renderItems = ( {item} : any) => (

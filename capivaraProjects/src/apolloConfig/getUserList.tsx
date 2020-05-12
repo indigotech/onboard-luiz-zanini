@@ -2,16 +2,13 @@ import { gql } from 'apollo-boost';
 import { getToken } from '../storage/getToken';
 import ApolloClient from 'apollo-boost';
 
-
-
-
 interface QueryListUsers {
     users : {
-        nodes : Array<ListUsers>
+        nodes : User[]
     }
 }
 
-interface ListUsers{
+interface User{
     id: number;
     name: string;
     email: string;
@@ -30,39 +27,27 @@ const queryUsers = gql`
 `;
 
 
-export async function getUserList() : Promise<Array<ListUsers>> {
+export async function getUserList() : Promise<User[]> {
 
-    try {
+    const token = await getToken();
+    const client = new ApolloClient({
+        uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
+        request: (operation) => {
+            operation.setContext({
+                headers: {
+                    authorization: token
+                }
+            })
+        }
+    });
 
-        const token = await getToken();
-        console.log(token);
+    const query = await client.query<QueryListUsers>({
+        query: queryUsers
+    })
 
-        const client = new ApolloClient({
-            uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
-            request: (operation) => {
-                operation.setContext({
-                    headers: {
-                        authorization: token
-                    }
-                })
-            }
-        });
+    console.log(query.data?.users.nodes);
 
-
-        const dados = await client.query<QueryListUsers>({
-            query: queryUsers
-        })
-
-        console.log(dados.data?.users.nodes);
-
-        return dados.data?.users.nodes;
-    }catch(error){
-       
-        console.log(error);
-       return []
-
-   }
-   
+    return query.data?.users.nodes;
 
 }
 
