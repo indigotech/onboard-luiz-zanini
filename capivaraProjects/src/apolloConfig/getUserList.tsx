@@ -11,13 +11,13 @@ type ListUser = User[];
 
 interface QueryListUsers {
     users : {
-        nodes : User[]
+        nodes : ListUser
     }
 }
 
 const queryUsers = gql`
-    query users {
-        users(pageInfo : {offset : 0, limit : 10}){
+    query users($pageInfo: PageInputType){
+        users(pageInfo : $pageInfo){
         nodes{
             id
             name
@@ -28,7 +28,7 @@ const queryUsers = gql`
 `;
 
 
-export async function getUserList() : Promise<ListUser> {
+export async function getUserList(users : ListUser) : Promise<ListUser> {
 
     const token = await getToken();
     const client = new ApolloClient({
@@ -42,13 +42,16 @@ export async function getUserList() : Promise<ListUser> {
         }
     });
 
+    const offset : number = users.length;
+    const limit : number = 10;
+
     const query = await client.query<QueryListUsers>({
-        query: queryUsers
+        query: queryUsers,
+        variables : {
+            pageInfo : {offset,limit}
+        }
     })
 
-    console.log(query.data?.users.nodes);
-
     return query.data?.users.nodes;
-
 }
 
