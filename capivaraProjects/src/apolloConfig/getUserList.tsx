@@ -11,7 +11,10 @@ type ListUser = User[];
 
 interface QueryListUsers {
     users : {
-        nodes : ListUser
+        nodes : ListUser,
+        pageInfo :{
+            hasNextPage: boolean
+        }
     }
 }
 
@@ -23,12 +26,15 @@ const queryUsers = gql`
             name
             email
         }
+        pageInfo{
+            hasNextPage   
+        }
         }
     }
 `;
 
 
-export async function getUserList(users : ListUser) : Promise<ListUser> {
+export async function getUserList(lengthListUsers : number) : Promise<QueryListUsers> {
 
     const token = await getToken();
     const client = new ApolloClient({
@@ -42,7 +48,7 @@ export async function getUserList(users : ListUser) : Promise<ListUser> {
         }
     });
 
-    const offset : number = users.length;
+    const offset : number = lengthListUsers;
     const limit : number = 10;
 
     const query = await client.query<QueryListUsers>({
@@ -52,6 +58,6 @@ export async function getUserList(users : ListUser) : Promise<ListUser> {
         }
     })
 
-    return query.data?.users.nodes;
+    return query.data;
 }
 
