@@ -4,12 +4,15 @@ import {
     View,
     Text,
     Button,
+    ScrollView,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import React, { Component } from 'react';
 import {ValidateRegex} from '../validate/regexValidation';
 
 interface AddUserState {
+    idInput : string,
     nameInput : string,
     phoneInput : string,
     birthDateInput : string,
@@ -34,6 +37,7 @@ export class addUser extends React.Component<{},AddUserState>{
         super(props);
     
         this.state = {
+            idInput : '',
             nameInput : '',
             phoneInput : '',
             birthDateInput : '',
