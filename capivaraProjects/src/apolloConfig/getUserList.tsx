@@ -1,17 +1,18 @@
 import { gql } from 'apollo-boost';
 import { getToken } from '../storage/getToken';
 import ApolloClient from 'apollo-boost';
+interface User{
+    id: number;
+    name: string;
+    email: string;
+}
+
+type ListUser = User[];
 
 interface QueryListUsers {
     users : {
         nodes : User[]
     }
-}
-
-interface User{
-    id: number;
-    name: string;
-    email: string;
 }
 
 const queryUsers = gql`
@@ -27,7 +28,7 @@ const queryUsers = gql`
 `;
 
 
-export async function getUserList() : Promise<User[]> {
+export async function getUserList() : Promise<ListUser> {
 
     const token = await getToken();
     const client = new ApolloClient({
