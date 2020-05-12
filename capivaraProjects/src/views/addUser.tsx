@@ -4,9 +4,7 @@ import {
     View,
     Text,
     Button,
-    ScrollView,
     ActivityIndicator,
-    Alert,
 } from 'react-native';
 import React, { Component } from 'react';
 import {validateRegex} from '../validate/regexValidation';
@@ -19,6 +17,7 @@ interface AddUserState {
     emailInput: string,
     loading: boolean,
     idIsValid : boolean,
+    nameIsValid : boolean,
     phoneIsValid : boolean,
     birthDateIsValid : boolean,
     emailIsValid: boolean,
@@ -55,6 +54,7 @@ export class addUser extends React.Component<{},AddUserState>{
             emailInput : '',
             loading : false,
             idIsValid : true,
+            nameIsValid : true,
             phoneIsValid : true,
             birthDateIsValid : true,
             emailIsValid : true,
@@ -72,18 +72,20 @@ export class addUser extends React.Component<{},AddUserState>{
                 />
                 <Text>Name</Text>
                 <TextInput
-                    style ={styles.sectionTextInput}
+                    style ={this.changesStyleInput('Name')}
                     onChangeText={(text) => this.changeStringInput(text,'Name')}
                 />
                 <Text>Phone</Text>
                 <TextInput
                     style ={this.changesStyleInput('Phone')}
-                    onChangeText={(text) => this.changeStringInput(text,'Phone')}
+                    onChangeText={(text) => this.changeStringInput  (text,'Phone')}
+                    defaultValue={'(##) ##### ####'}
                 />
                 <Text>Data de Aniversário</Text>
                 <TextInput
                     style ={this.changesStyleInput('DateBirth')}
                     onChangeText={(text) => this.changeStringInput(text,'DateBirth')}
+                    defaultValue={'dd/mm/yyyy'}
                 />
                 <Text>E-mail</Text>
                 <TextInput
@@ -110,6 +112,7 @@ export class addUser extends React.Component<{},AddUserState>{
         this.setState( { phoneIsValid : this.validate.Phone(this.state.phoneInput)} );
         this.setState( { emailIsValid : this.validate.Email(this.state.emailInput)} );
         this.setState( { birthDateIsValid : this.validate.dateBirth(this.state.birthDateInput)} );
+        this.setState( { nameIsValid : this.validate.Name(this.state.nameInput)} );
 
         if(this.state.idIsValid && this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid){
             return true;
@@ -131,6 +134,11 @@ export class addUser extends React.Component<{},AddUserState>{
                 break;
             case 'Name' :
                 this.setState({nameInput : text});
+
+                if (!this.state.nameIsValid) {
+                    this.setState( { nameIsValid : this.validate.Name(text)} );
+                }
+
                 break;
             case 'Phone' :
                 this.setState({phoneInput : text});
@@ -167,7 +175,11 @@ export class addUser extends React.Component<{},AddUserState>{
                     return styleValid;
                 }
                 return styleInValid;
-                break;
+            case 'Name' :
+                if(this.state.nameIsValid){
+                    return styleValid;
+                }
+                return styleInValid;    
             case 'Phone' :
                 if(this.state.phoneIsValid){
                     return styleValid;
@@ -178,13 +190,11 @@ export class addUser extends React.Component<{},AddUserState>{
                     return styleValid;
                 }
                 return styleInValid;
-                break;
             case 'DateBirth':
                 if(this.state.birthDateIsValid){
                     return styleValid;
                 }
                 return styleInValid;
-                break;
         }
 
     }
