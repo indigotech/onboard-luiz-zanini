@@ -4,47 +4,65 @@ import {
     Text,
     FlatList,
     Image,
-  } from 'react-native';
+    Alert,
+} from 'react-native';
 
-const usuarios : ListUser[] = [
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-    {email : 'leandro@gmail.com' , name : 'Leandro'},
-  ]
- 
-interface ListUser {
+import React, { Component, useDebugValue } from 'react';
+import { getUserList } from '../apolloConfig/getUserList';
+
+interface User {
+    id : number,
     name : string,
     email : string,
 }
 
-import React, { Component } from 'react';
+type ListUser = User[];
 
-export class UserList extends React.Component{
+interface UsersListState{
+    users : ListUser,
+    errorData : boolean
+}
+
+export class UserList extends React.Component<{},UsersListState>{
 
     constructor(props : any){
         
         super(props);
+
+        this.state = {
+            users : [],
+            errorData : false,
+        }
 
     }
 
     render(){
         return(
             <View style ={styles.sectionContainer}>
+                {this.state.errorData ? 
+                <Text> Falha no carregamento dos dados.</Text> :
                 <FlatList
-                    data = {usuarios}
+                    data = {this.state.users} 
                     renderItem= {this.renderItems}
-                    keyExtractor = {(item, index) => 'key'+index}
+                    keyExtractor = {(item) => 'key'+item.id}
                 />
+                }
             </View>
         );
     };
+
+    componentDidMount(){
+        this.getUsers()
+            .then((result : ListUser) => this.setState({users : result}) )
+            .catch(() => this.setState({errorData : true}) )
+    }   
+
+    private async getUsers() : Promise<ListUser>{ 
+        
+        const data : ListUser = await getUserList();
+        return data;
+
+    }
 
     private renderItems = ( {item} : any) => (
         <View style = {styles.sectionUsuario} >

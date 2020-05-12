@@ -3,7 +3,6 @@ import {
     StyleSheet,
     View,
     Text,
-    BackHandler,
     Button,
     ScrollView,
     Alert
@@ -13,6 +12,7 @@ import React, { Component } from 'react';
 import { deleteToken } from '../storage/deleteToken';
 import { Navigation } from "react-native-navigation";
 import { UserList } from './usersList';
+import { getUserList } from '../apolloConfig/getUserList';
 
 export class Home extends React.Component {
 
@@ -21,7 +21,28 @@ export class Home extends React.Component {
         super(props);
     }
 
-    private async logOut() {
+    render() {
+        return (
+            <ScrollView>
+                <View style={styles.sectionContaineir}>
+                    <View style={styles.sectionCabecalho}>
+                        <View style={styles.sectionViewButton}>
+                            <Button
+                                title={'LogOut'}
+                                onPress={this.logOut}
+                                color='#FFFFFF'
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.sectionViewText} >
+                        <UserList/>
+                    </View>
+                </View>
+            </ScrollView>
+        );
+    }
+
+    private logOut = async () => {
 
         try {
 
@@ -51,27 +72,7 @@ export class Home extends React.Component {
         }
 
     }
-    // Se o usuário desfizer o Login
-    render() {
-        return (
-            <ScrollView>
-                <View style={styles.sectionContaineir}>
-                    <View style={styles.sectionCabecalho}>
-                        <View style={styles.sectionViewButton}>
-                            <Button
-                                title={'LogOut'}
-                                onPress={() => { this.logOut() }}
-                                color='#FFFFFF'
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.sectionViewText} >
-                        <UserList/>
-                    </View>
-                </View>
-            </ScrollView>
-        );
-    }
+    
 }
 
 
