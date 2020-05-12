@@ -6,6 +6,7 @@ import {
     Image,
     Alert,
     Button,
+    ActivityIndicator,
 } from 'react-native';
 
 import React, { Component, useDebugValue } from 'react';
@@ -21,7 +22,8 @@ type ListUser = User[];
 
 interface UsersListState{
     users : ListUser,
-    errorData : boolean
+    errorData : boolean,
+    loadButton : boolean,
 }
 
 export class UserList extends React.Component<{},UsersListState>{
@@ -33,6 +35,7 @@ export class UserList extends React.Component<{},UsersListState>{
         this.state = {
             users : [],
             errorData : false,
+            loadButton : false,
         }
 
     }
@@ -49,27 +52,56 @@ export class UserList extends React.Component<{},UsersListState>{
                     extraData = {this.state.users}
                 />
                 }
+                <View style = {styles.viewButtonLoad}>
+                    <View style = {styles.ButtonLoad} >
+                        {this.state.loadButton ?
+                        <ActivityIndicator style ={styles.activityLoadButton} color="#0000ff" /> :
+                        <Button
+                            title = 'Load More'
+                            onPress = {this.renderMoreItems}
+                            color = "#FFFFFF"
+                        />
+                        }   
+                    </View>
+                </View>
             </View>
         );
     };
 
     componentDidMount(){
-        this.getUsers()
-            .then((result : ListUser) => this.setState({users : result}) )
-            .catch(() => this.setState({errorData : true}) )
+        
+        this.getUsers();
+
     }   
 
-    private async getUsers() : Promise<ListUser>{ 
+    private async getUsers() : Promise<void>{ 
         
-        const data : ListUser = await getUserList();
-        return data;
+        try{
+            
+            const dataUsers : ListUser = await getUserList(this.state.users);
+            this.setState({users : dataUsers})
+
+        }catch{
+            this.setState({errorData : true})
+        }
 
     }
 
     private renderMoreItems = async () => {
 
-        const newDataUsers :  ListUser = await this.getUsers();
-        this.setState({ users : this.state.users.concat(newDataUsers)});
+        try{
+        
+            this.setState({ loadButton : true })
+            const newDataUsers :  ListUser = await getUserList(this.state.users);
+            this.setState({ users : this.state.users.concat(newDataUsers)});
+        
+        }
+        catch{
+            this.setState({errorData : true});
+        }
+        finally{
+            this.setState({ loadButton : false });
+        }
 
     }
 
@@ -114,6 +146,8 @@ const styles = StyleSheet.create({
         margin: 7,
         backgroundColor: '#FFFFFF',
         borderRadius: 4
+    },
+    activityLoadButton : {
+        height : 37 
     }
-
 });

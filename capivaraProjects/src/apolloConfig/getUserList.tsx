@@ -28,7 +28,7 @@ const queryUsers = gql`
 `;
 
 
-export async function getUserList() : Promise<ListUser> {
+export async function getUserList(users : ListUser) : Promise<ListUser> {
 
     const token = await getToken();
     const client = new ApolloClient({
@@ -42,11 +42,16 @@ export async function getUserList() : Promise<ListUser> {
         }
     });
 
-    const query = await client.query<QueryListUsers>({
-        query: queryUsers
-    })
-    
-    return query.data?.users.nodes;
+    const offset : number = users.length;
+    const limit : number = 10;
 
+    const query = await client.query<QueryListUsers>({
+        query: queryUsers,
+        variables : {
+            pageInfo : {offset,limit}
+        }
+    })
+
+    return query.data?.users.nodes;
 }
 
