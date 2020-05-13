@@ -69,35 +69,35 @@ export class addUser extends React.Component<{},AddUserState>{
                 <Text>Nome</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.nameIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Name')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Name')}
                 />
                 <Text>Phone</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.phoneIsValid)]}
-                    onChangeText={(text) => this.changeStringInput  (text,'Phone')}
-                    defaultValue={'(##) ##### ####'}
+                    onChangeText={(text) => this.handleChangeStringInput  (text,'Phone')}
+                    defaultValue={'#########'}
                 />
                 <Text>Data de Aniversário</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.birthDateIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'DateBirth')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'DateBirth')}
                     defaultValue={'dd/mm/yyyy'}
                 />
                 <Text>E-mail</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.emailIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Email')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Email')}
                 />
                 <Text>Senha</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.passwordIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'password')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'password')}
                     secureTextEntry={true}
                 />
                 <Text>Role</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.roleIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Role')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Role')}
                 />
                 <View style={styles.sectionButtonInput}>
                     {this.state.loading ?
@@ -127,23 +127,25 @@ export class addUser extends React.Component<{},AddUserState>{
         if(this.checkInputState()){
             
             const DateFormat : string = this.dateFormat();
-            console.log(DateFormat);
-            const newUser : User = {
-                 name : this.state.nameInput,
-                 phone : this.state.phoneInput,
-                 email : this.state.emailInput,
-                 dateBirth : DateFormat,
-                 password : this.state.passwordInput,
-                 role : this.state.roleInput,
-            }
-
+            const newUser : User = this.createUserType(DateFormat);
             this.createUserInServer(newUser);
+
             return;
         }   
         
         Alert.alert("Campos inválidos")
 
+    }
 
+    private createUserType( date : string) : User {
+        return ({
+            name : this.state.nameInput,
+            phone : this.state.phoneInput,
+            email : this.state.emailInput,
+            dateBirth : date,
+            password : this.state.passwordInput,
+            role : this.state.roleInput,
+       });
     }
 
     private checkInputState() : boolean{
@@ -154,14 +156,17 @@ export class addUser extends React.Component<{},AddUserState>{
     private dateFormat() : string{
 
         const birthDateSplit : string[] = this.state.birthDateInput.split('/');
-        if((+birthDateSplit[1])< 10 ){
+        const monthTen : number = 10;
+        
+        if((+birthDateSplit[1]) < monthTen ){
             return (birthDateSplit[2]+'-0'+(+birthDateSplit[1])+'-'+birthDateSplit[0])
         }
+
         return (birthDateSplit[2]+'-'+(+birthDateSplit[1])+'-'+birthDateSplit[0]);
             
     }
 
-    private changeStringInput(text : string,typeOfInput : string){
+    private handleChangeStringInput(text : string,typeOfInput : string){
 
         switch(typeOfInput){
             case 'Name' :
@@ -222,10 +227,11 @@ export class addUser extends React.Component<{},AddUserState>{
     }
 
     private async createUserInServer(newUser : User) : Promise<void>{
+
         try{
             
-            const dados : any= await createUser(newUser);
-
+            this.setState({ loading : true} );
+            await createUser(newUser);
             Alert.alert('Usuário criado com sucesso!');
             
         }catch(error){
@@ -236,7 +242,9 @@ export class addUser extends React.Component<{},AddUserState>{
             }
             Alert.alert(error.graphQLErrors[0].message);
 
-        }
+        }finally{   
+            this.setState({ loading : false} );
+        }   
 
     }
 }
