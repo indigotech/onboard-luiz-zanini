@@ -7,10 +7,9 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import React, { Component } from 'react';
-import {validateRegex} from '../validate/regexValidation';
+import {ValidateRegex} from '../validate/regexValidation';
 
 interface AddUserState {
-    idInput : string,
     nameInput : string,
     phoneInput : string,
     birthDateInput : string,
@@ -18,7 +17,6 @@ interface AddUserState {
     passwordInput: string,
     roleInput: string,
     loading: boolean,
-    idIsValid : boolean,
     nameIsValid : boolean,
     phoneIsValid : boolean,
     birthDateIsValid : boolean,
@@ -27,31 +25,23 @@ interface AddUserState {
     roleIsValid : boolean
 }
 
-const styleValid  : any = {
+const styleBorder  : any = {
     height: 40,
-    borderColor: "#C0C0C0",
     borderWidth: 2,
     borderRadius: 15,
     marginBottom: 20,
+    borderColor: "#C0C0C0",
 }
 
-const styleInValid  : any = {
-    height: 40,
-    borderColor: '#ff9090',
-    borderWidth: 2,
-    borderRadius: 15,
-    marginBottom: 20,
-}
 
 export class addUser extends React.Component<{},AddUserState>{
 
-    validate = new validateRegex();
+    validate = new ValidateRegex();
 
     constructor(props : any){
         super(props);
     
         this.state = {
-            idInput : '',
             nameInput : '',
             phoneInput : '',
             birthDateInput : '',
@@ -59,7 +49,6 @@ export class addUser extends React.Component<{},AddUserState>{
             passwordInput : '',
             roleInput : '',
             loading : false,
-            idIsValid : true,
             nameIsValid : true,
             phoneIsValid : true,
             birthDateIsValid : true,
@@ -72,43 +61,37 @@ export class addUser extends React.Component<{},AddUserState>{
     render(){
         return(
             <View style={styles.sectionViewInput}>
-                
-                <Text>Id</Text>
-                <TextInput
-                    style ={this.changesStyleInput('Id')}
-                    onChangeText={(text) => this.changeStringInput(text,'Id')}
-                />
                 <Text>Nome</Text>
                 <TextInput
-                    style ={this.changesStyleInput('Name')}
+                    style ={this.decideStyle(this.state.nameIsValid)}
                     onChangeText={(text) => this.changeStringInput(text,'Name')}
                 />
                 <Text>Phone</Text>
                 <TextInput
-                    style ={this.changesStyleInput('Phone')}
+                    style ={this.decideStyle(this.state.phoneIsValid)}
                     onChangeText={(text) => this.changeStringInput  (text,'Phone')}
                     defaultValue={'(##) ##### ####'}
                 />
                 <Text>Data de Aniversário</Text>
                 <TextInput
-                    style ={this.changesStyleInput('DateBirth')}
+                    style ={this.decideStyle(this.state.birthDateIsValid)}
                     onChangeText={(text) => this.changeStringInput(text,'DateBirth')}
                     defaultValue={'dd/mm/yyyy'}
                 />
                 <Text>E-mail</Text>
                 <TextInput
-                    style ={this.changesStyleInput('Email')}
+                    style ={this.decideStyle(this.state.emailIsValid)}
                     onChangeText={(text) => this.changeStringInput(text,'Email')}
                 />
                 <Text>Senha</Text>
                 <TextInput
-                    style ={this.changesStyleInput('password')}
+                    style ={this.decideStyle(this.state.passwordIsValid)}
                     onChangeText={(text) => this.changeStringInput(text,'password')}
                     secureTextEntry={true}
                 />
                 <Text>Role</Text>
                 <TextInput
-                    style ={this.changesStyleInput('Role')}
+                    style ={this.decideStyle(this.state.roleIsValid)}
                     onChangeText={(text) => this.changeStringInput(text,'Role')}
                 />
                 <View style={styles.sectionButtonInput}>
@@ -116,7 +99,7 @@ export class addUser extends React.Component<{},AddUserState>{
                     <ActivityIndicator size="small" color="#0000ff" /> :
                     <Button
                     color="#FFFFFF"
-                    onPress={this.checkInput}
+                    onPress={this.handleButtonPress}
                     title='finish'
                     >
                     </Button>}
@@ -125,39 +108,29 @@ export class addUser extends React.Component<{},AddUserState>{
         );
     }
 
-    private checkInput = () =>{
+    private handleButtonPress = () =>{
 
-        this.setState( { idIsValid : this.validate.Id(this.state.idInput)} );
-        this.setState( { phoneIsValid : this.validate.Phone(this.state.phoneInput)} );
-        this.setState( { emailIsValid : this.validate.Email(this.state.emailInput)} );
-        this.setState( { birthDateIsValid : this.validate.dateBirth(this.state.birthDateInput)} );
-        this.setState( { nameIsValid : this.validate.Name(this.state.nameInput)} );
-        this.setState( { passwordIsValid : this.validate.Password(this.state.passwordInput)} );
-        this.setState( { roleIsValid : this.validate.Name(this.state.roleInput)} );
+        this.setState({ 
+                        phoneIsValid       : this.validate.phone(this.state.phoneInput),
+                        emailIsValid       : this.validate.email(this.state.emailInput),
+                        birthDateIsValid   : this.validate.dateBirth(this.state.birthDateInput),
+                        nameIsValid        : this.validate.name(this.state.nameInput),
+                        passwordIsValid    : this.validate.password(this.state.passwordInput),
+                        roleIsValid        : this.validate.name(this.state.roleInput), 
+                    });
 
-        if(this.state.idIsValid && this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid){
-            return true;
-        }
-        return false;
+        return  this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid  && this.state.passwordIsValid && this.state.roleIsValid;
 
     }
 
     private changeStringInput(text : string,typeOfInput : string){
 
         switch(typeOfInput){
-            case 'Id' :
-                this.setState({idInput : text});
-                
-                if (!this.state.idIsValid) {
-                    this.setState( { idIsValid : this.validate.Id(text)} );
-                }
-
-                break;
             case 'Name' :
                 this.setState({nameInput : text});
 
                 if (!this.state.nameIsValid) {
-                    this.setState( { nameIsValid : this.validate.Name(text)} );
+                    this.setState( { nameIsValid : this.validate.name(text)} );
                 }
 
                 break;
@@ -165,7 +138,7 @@ export class addUser extends React.Component<{},AddUserState>{
                 this.setState({phoneInput : text});
 
                 if (!this.state.phoneIsValid) {
-                    this.setState( { phoneIsValid : this.validate.Phone(text)} );
+                    this.setState( { phoneIsValid : this.validate.phone(text)} );
                 }
 
                 break;
@@ -173,7 +146,7 @@ export class addUser extends React.Component<{},AddUserState>{
                 this.setState({emailInput : text})
 
                 if (!this.state.emailIsValid) {
-                    this.setState( { emailIsValid : this.validate.Email(text)} );
+                    this.setState( { emailIsValid : this.validate.email(text)} );
                 }
 
                 break;
@@ -189,7 +162,7 @@ export class addUser extends React.Component<{},AddUserState>{
                 this.setState({passwordInput : text})
                 
                 if (!this.state.passwordIsValid) {
-                    this.setState( { passwordIsValid : this.validate.Password(text)} );
+                    this.setState( { passwordIsValid : this.validate.password(text)} );
                 }
 
                 break;
@@ -197,53 +170,19 @@ export class addUser extends React.Component<{},AddUserState>{
                 this.setState({roleInput : text})
                 
                 if (!this.state.roleIsValid) {
-                    this.setState( { roleIsValid : this.validate.UserRole(text)} );
+                    this.setState( { roleIsValid : this.validate.userRole(text)} );
                 }
 
                 break;
         }
     }
 
-    private changesStyleInput(typeOfInput : string){
+    private decideStyle(typeOfStyle : boolean){
 
-        switch(typeOfInput){
-            case 'Id' :
-                if(this.state.idIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
-            case 'Name' :
-                if(this.state.nameIsValid){
-                    return styleValid;
-                }
-                return styleInValid;    
-            case 'Phone' :
-                if(this.state.phoneIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
-            case 'Email' :
-                if(this.state.emailIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
-            case 'DateBirth':
-                if(this.state.birthDateIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
-            case 'password':
-                if(this.state.passwordIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
-            case 'Role':
-                if(this.state.roleIsValid){
-                    return styleValid;
-                }
-                return styleInValid;
+        if(typeOfStyle){
+            styleBorder.borderColor = '#ff9090';
         }
-
+        return styleBorder;
     }
 
 }
