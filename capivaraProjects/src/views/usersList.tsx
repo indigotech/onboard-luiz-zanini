@@ -19,11 +19,19 @@ interface User {
 }
 
 type ListUser = User[];
-
+interface QueryListUsers {
+    users : {
+        nodes : ListUser,
+        pageInfo :{
+            hasNextPage: boolean
+        }
+    }
+}
 interface UsersListState{
     users : ListUser,
     errorData : boolean,
     loadButton : boolean,
+    loadMoreButton : boolean,
 }
 
 export class UserList extends React.Component<{},UsersListState>{
@@ -36,6 +44,7 @@ export class UserList extends React.Component<{},UsersListState>{
             users : [],
             errorData : false,
             loadButton : false,
+            loadMoreButton : true,
         }
 
     }
@@ -54,14 +63,16 @@ export class UserList extends React.Component<{},UsersListState>{
                 }
                 <View style = {styles.viewButtonLoad}>
                     <View style = {styles.ButtonLoad} >
-                        {this.state.loadButton ?
-                        <ActivityIndicator style ={styles.activityLoadButton} color="#0000ff" /> :
-                        <Button
-                            title = 'Load More'
-                            onPress = {this.renderMoreItems}
-                            color = "#FFFFFF"
-                        />
-                        }   
+                        {this.state.loadMoreButton ?
+                            this.state.loadButton ?
+                            <ActivityIndicator style ={styles.activityLoadButton} color="#0000ff" /> :
+                            <Button
+                                title = 'Load More'
+                                onPress = {this.renderMoreItems}
+                                color = "#FFFFFF"
+                            />
+                            :<View></View>
+                        }
                     </View>
                 </View>
             </View>
@@ -78,9 +89,8 @@ export class UserList extends React.Component<{},UsersListState>{
         
         try{
             
-            const dataUsers : ListUser = await getUserList(this.state.users);
-            this.setState({users : dataUsers})
-
+            await this.addUsersState();
+            
         }catch{
             this.setState({errorData : true})
         }
@@ -92,8 +102,7 @@ export class UserList extends React.Component<{},UsersListState>{
         try{
         
             this.setState({ loadButton : true })
-            const newDataUsers :  ListUser = await getUserList(this.state.users);
-            this.setState({ users : this.state.users.concat(newDataUsers)});
+            await this.addUsersState();
         
         }
         catch{
@@ -103,6 +112,18 @@ export class UserList extends React.Component<{},UsersListState>{
             this.setState({ loadButton : false });
         }
 
+    }
+
+    private async addUsersState() {
+
+        const queryUsers : QueryListUsers = await getUserList(this.state.users.length);
+        const newDataUsers : ListUser = queryUsers.users.nodes;
+        const hasNextPage : boolean = queryUsers.users.pageInfo.hasNextPage;
+        this.setState({ 
+            users : this.state.users.concat(newDataUsers) , 
+            loadMoreButton : hasNextPage
+        });
+    
     }
 
     private renderItems = ( {item} : any) => (
