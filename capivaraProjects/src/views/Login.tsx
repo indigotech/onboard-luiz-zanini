@@ -12,7 +12,7 @@ import React, { Component } from 'react';
 import { validateLoginInput } from "../validate/validateLoginInput";
 import { getToken } from '../storage/getToken';
 import { Navigation } from 'react-native-navigation';
-import { validateRegex } from '../validate/regexValidation';
+import { ValidateRegex } from '../validate/regexValidation';
 import {signIn} from '../apolloConfig/signIn';
 
 interface LoginState {
@@ -30,13 +30,13 @@ interface loginValidate {
 
 class Login extends React.Component<{}, LoginState>{
 
-  validate: validateRegex;
+  validate: ValidateRegex;
 
   constructor(props: any) {
 
     super(props);
 
-    this.validate = new validateRegex();
+    this.validate = new ValidateRegex();
     this.state = {
       emailInput: "",
       passwordInput: "",
@@ -155,7 +155,7 @@ class Login extends React.Component<{}, LoginState>{
     
     this.setState({ emailInput: text });
     if (!this.state.isEmailValid) {
-      this.setState({ isEmailValid: this.validate.Email(text) });
+      this.setState({ isEmailValid: this.validate.email(text) });
     }
   }
 
@@ -163,7 +163,7 @@ class Login extends React.Component<{}, LoginState>{
     
     this.setState({ passwordInput: text });
     if (!this.state.isPasswordValid) {
-      this.setState({ isPasswordValid: this.validate.Password(text) });
+      this.setState({ isPasswordValid: this.validate.password(text) });
     }
   }
 

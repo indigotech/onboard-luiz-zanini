@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import {validateRegex} from './regexValidation';
+import {ValidateRegex} from './regexValidation';
 
 interface LoginState {
     emailInput: string,
@@ -14,10 +14,10 @@ export function validateLoginInput(inputLoginState: LoginState, acessHomePage : 
 
     const email: string = inputLoginState.emailInput;
     const password: string = inputLoginState.passwordInput;
-    const validation = new validateRegex();
+    const validation = new ValidateRegex();
     const check : loginValidate = {
-        isEmailValid : validation.Email(email),
-        isPasswordValid : validation.Password(password)
+        isEmailValid : validation.email(email),
+        isPasswordValid : validation.password(password)
     };
 
    if (check.isPasswordValid && !check.isEmailValid) {

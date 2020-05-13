@@ -23,22 +23,31 @@ export class Home extends React.Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.sectionContaineir}>
-                    <View style={styles.sectionCabecalho}>
-                        <View style={styles.sectionViewButton}>
-                            <Button
-                                title={'LogOut'}
-                                onPress={this.logOut}
-                                color='#FFFFFF'
-                            />
+            <View style = { styles.sectionViewHome}>
+                <ScrollView>
+                    <View style={styles.sectionContaineir}>
+                        <View style={styles.sectionCabecalho}>
+                            <View style={styles.sectionViewButton}>
+                                <Button
+                                    title={'LogOut'}
+                                    onPress={this.logOut}
+                                    color='#FFFFFF'
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.sectionViewText} >
+                            <UserList/>
                         </View>
                     </View>
-                    <View style={styles.sectionViewText} >
-                        <UserList/>
-                    </View>
+                </ScrollView>
+                <View style = {styles.buttonAddMoreView}>
+                    <Button
+                        color='#FFFFFF'
+                        onPress = {this.acesUserPage}
+                        title = '+'
+                    />
                 </View>
-            </ScrollView>
+            </View>
         );
     }
 
@@ -72,14 +81,34 @@ export class Home extends React.Component {
         }
 
     }
+
+    private acesUserPage() {
+
+        Navigation.push('Home', {
+          component: {
+            id: 'User',
+            name: 'addUser',
+            options: {
+              topBar: {
+                title: {
+                  text: 'Novo usuário'
+                }
+              }
+            }
+          }
+        });
+    
+    }
     
 }
 
 
 const styles = StyleSheet.create({
+    sectionViewHome :{
+        backgroundColor: '#dcdcdc',
+    },
     sectionContaineir: {
         flex: 1,
-        backgroundColor: '#dcdcdc',
     },
     sectionViewText: {
         flex: 0.9,
@@ -100,4 +129,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 32,
     },
+    buttonAddMoreView :{
+        width: 50,  
+        height: 50,   
+        borderRadius: 30,
+        backgroundColor : 'black',                                              
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bottom: 20,                                                    
+        right: 20, 
+    }
 });

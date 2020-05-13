@@ -5,9 +5,11 @@
 import { Navigation } from "react-native-navigation";
 import App from './App';
 import {Home} from './src/views/Home';
+import {addUser} from './src/views/addUser';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Home', () => Home);
+Navigation.registerComponent('addUser', () => addUser);
 
 
 const loginPage = {
@@ -40,6 +42,28 @@ const homePage = {
   }
 };
 
+const userAddPage = {
+  root: {
+    stack: {
+      id: 'User',
+      children: [
+        {
+          component: {
+            name: 'UserAdd'
+          }
+        }
+      ]
+    }
+  }
+};
+
+addUser.options = {
+  topBar: {
+    title: {
+      text: 'Adicionar novo Usuário',
+    }
+  }
+};
 
 Home.options = {
   topBar: {
