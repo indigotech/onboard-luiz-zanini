@@ -7,6 +7,7 @@ import {
     Alert,
     Button,
     ActivityIndicator,
+    TouchableOpacity,
 } from 'react-native';
 
 import React, { Component, useDebugValue } from 'react';
@@ -127,10 +128,21 @@ export class UserList extends React.Component<{},UsersListState>{
     }
 
     private renderItems = ( {item} : any) => (
-        <View style = {styles.sectionUsuario} >
-            <Text style={styles.textName}>{item.name}</Text>
-            <Text style={styles.textEmail}>{item.email}</Text>
-        </View>
+
+        <TouchableOpacity activeOpacity = {.5} onPress={() => {}}>
+            <View style = {styles.sectionUsuario}>
+                <View style = {styles. sectionViewUserImage }>
+                    <Image 
+                        source={require('../images/user-icon-vector.jpg')} 
+                        style={styles.sectionUserImage}
+                    />
+                </View>
+                <View style = {styles.sectionInputUsuario} >
+                    <Text style={styles.textName}>{item.name}</Text>
+                    <Text style={styles.textEmail}>{item.email}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
     )
 }
 
@@ -166,7 +178,18 @@ const styles = StyleSheet.create({
         height: 100 ,
         margin: 7,
         backgroundColor: '#FFFFFF',
-        borderRadius: 4
+        borderRadius: 4,
+        flexDirection: 'row',
+    },
+    sectionViewUserImage :{
+        width: '25%',
+    },
+    sectionUserImage : {
+        width: 60,
+        height: 60,
+    },
+    sectionInputUsuario :{
+        width: '75  %',
     },
     activityLoadButton : {
         height : 37 

@@ -8,11 +8,10 @@ import {
     Alert
 } from 'react-native';
 
-import React, { Component } from 'react';
+import React from 'react';
 import { deleteToken } from '../storage/deleteToken';
 import { Navigation } from "react-native-navigation";
 import { UserList } from './usersList';
-import { getUserList } from '../apolloConfig/getUserList';
 
 export class Home extends React.Component {
 
@@ -51,34 +50,40 @@ export class Home extends React.Component {
         );
     }
 
+
+
     private logOut = async () => {
 
         try {
 
             await deleteToken();
-            Navigation.push('Home', {
-                component: {
-                    id: 'Login',
-                    name: 'Login',
-                    options: {
-                        topBar: {
-                            title: {
-                                text: 'Login'
-                            },
-                            backButton: {
-                                visible: false
-                            }
-                        }
-                    }
-                }
-            });
+            this.acessLoginPage();
 
         }
         catch{
-
             Alert.alert('Problemas para deslogar');
-
         }
+
+    }
+
+    private acessLoginPage(){
+
+        Navigation.push('Home', {
+            component: {
+                id: 'Login',
+                name: 'Login',
+                options: {
+                    topBar: {
+                        title: {
+                            text: 'Login'
+                        },
+                        backButton: {
+                            visible: false
+                        }
+                    }
+                }
+            }
+        });
 
     }
 
