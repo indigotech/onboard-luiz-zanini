@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 import {ValidateRegex} from '../validate/regexValidation';
+import {createUser} from '../apolloConfig/createUser';
 
 interface AddUserState {
     idInput : string,
@@ -28,6 +29,14 @@ interface AddUserState {
     roleIsValid : boolean
 }
 
+interface User {
+    name : string,
+    phone : string,
+    dateBirth : string,
+    email : string,
+    password : string,
+    role : string,
+}
 
 export class addUser extends React.Component<{},AddUserState>{
 
@@ -107,16 +116,49 @@ export class addUser extends React.Component<{},AddUserState>{
     private handleButtonPress = () =>{
 
         this.setState({ 
-                        phoneIsValid       : this.validate.phone(this.state.phoneInput),
-                        emailIsValid       : this.validate.email(this.state.emailInput),
-                        birthDateIsValid   : this.validate.dateBirth(this.state.birthDateInput),
-                        nameIsValid        : this.validate.name(this.state.nameInput),
-                        passwordIsValid    : this.validate.password(this.state.passwordInput),
-                        roleIsValid        : this.validate.name(this.state.roleInput), 
-                    });
+            phoneIsValid       : this.validate.phone(this.state.phoneInput),
+            emailIsValid       : this.validate.email(this.state.emailInput),
+            birthDateIsValid   : this.validate.dateBirth(this.state.birthDateInput),
+            nameIsValid        : this.validate.name(this.state.nameInput),
+            passwordIsValid    : this.validate.password(this.state.passwordInput),
+            roleIsValid        : this.validate.name(this.state.roleInput), 
+        });
 
-        return this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid  && this.state.passwordIsValid && this.state.roleIsValid;
+        if(this.checkInputState()){
+            
+            const DateFormat : string = this.dateFormat();
+            console.log(DateFormat);
+            const newUser : User = {
+                 name : this.state.nameInput,
+                 phone : this.state.phoneInput,
+                 email : this.state.emailInput,
+                 dateBirth : DateFormat,
+                 password : this.state.passwordInput,
+                 role : this.state.roleInput,
+            }
 
+            this.createUserInServer(newUser);
+            return;
+        }   
+        
+        Alert.alert("Campos inválidos")
+
+
+    }
+
+    private checkInputState() : boolean{
+        return this.validate.phone(this.state.phoneInput) && this.validate.email(this.state.emailInput) && this.validate.dateBirth(this.state.birthDateInput)
+        && this.validate.name(this.state.nameInput) && this.validate.password(this.state.passwordInput) && this.validate.name(this.state.roleInput);
+    }
+
+    private dateFormat() : string{
+
+        const birthDateSplit : string[] = this.state.birthDateInput.split('/');
+        if((+birthDateSplit[1])< 10 ){
+            return (birthDateSplit[2]+'-0'+(+birthDateSplit[1])+'-'+birthDateSplit[0])
+        }
+        return (birthDateSplit[2]+'-'+(+birthDateSplit[1])+'-'+birthDateSplit[0]);
+            
     }
 
     private changeStringInput(text : string,typeOfInput : string){
@@ -179,6 +221,24 @@ export class addUser extends React.Component<{},AddUserState>{
 
     }
 
+    private async createUserInServer(newUser : User) : Promise<void>{
+        try{
+            
+            const dados : any= await createUser(newUser);
+
+            Alert.alert('Usuário criado com sucesso!');
+            
+        }catch(error){
+
+            if(error.graphQLErrors[0] == undefined){
+                Alert.alert('Problema de conexão com o servidor');
+                return;
+            }
+            Alert.alert(error.graphQLErrors[0].message);
+
+        }
+
+    }
 }
 
 const styles = StyleSheet.create({
