@@ -25,14 +25,6 @@ interface AddUserState {
     roleIsValid : boolean
 }
 
-const styleBorder  : any = {
-    height: 40,
-    borderWidth: 2,
-    borderRadius: 15,
-    marginBottom: 20,
-    borderColor: "#C0C0C0",
-}
-
 
 export class addUser extends React.Component<{},AddUserState>{
 
@@ -63,35 +55,35 @@ export class addUser extends React.Component<{},AddUserState>{
             <View style={styles.sectionViewInput}>
                 <Text>Nome</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.nameIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.nameIsValid)]}
                     onChangeText={(text) => this.changeStringInput(text,'Name')}
                 />
                 <Text>Phone</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.phoneIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.phoneIsValid)]}
                     onChangeText={(text) => this.changeStringInput  (text,'Phone')}
                     defaultValue={'(##) ##### ####'}
                 />
                 <Text>Data de Aniversário</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.birthDateIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.birthDateIsValid)]}
                     onChangeText={(text) => this.changeStringInput(text,'DateBirth')}
                     defaultValue={'dd/mm/yyyy'}
                 />
                 <Text>E-mail</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.emailIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.emailIsValid)]}
                     onChangeText={(text) => this.changeStringInput(text,'Email')}
                 />
                 <Text>Senha</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.passwordIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.passwordIsValid)]}
                     onChangeText={(text) => this.changeStringInput(text,'password')}
                     secureTextEntry={true}
                 />
                 <Text>Role</Text>
                 <TextInput
-                    style ={this.decideStyle(this.state.roleIsValid)}
+                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.roleIsValid)]}
                     onChangeText={(text) => this.changeStringInput(text,'Role')}
                 />
                 <View style={styles.sectionButtonInput}>
@@ -119,7 +111,7 @@ export class addUser extends React.Component<{},AddUserState>{
                         roleIsValid        : this.validate.name(this.state.roleInput), 
                     });
 
-        return  this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid  && this.state.passwordIsValid && this.state.roleIsValid;
+        return this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid  && this.state.passwordIsValid && this.state.roleIsValid;
 
     }
 
@@ -177,17 +169,21 @@ export class addUser extends React.Component<{},AddUserState>{
         }
     }
 
-    private decideStyle(typeOfStyle : boolean){
+    private decideBorderStyle(typeOfStyle : boolean) : any{
+        
+        return typeOfStyle ? {borderColor : '#C0C0C0'} : {borderColor : '#ff9090' };
 
-        if(typeOfStyle){
-            styleBorder.borderColor = '#ff9090';
-        }
-        return styleBorder;
     }
 
 }
 
 const styles = StyleSheet.create({
+    borderInput : {
+        height: 40,
+        borderWidth: 2,
+        borderRadius: 15,
+        marginBottom: 20,
+    },
     sectionTextInput: {
         height: 40,
         borderColor: "#C0C0C0",
