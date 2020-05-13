@@ -15,12 +15,16 @@ interface AddUserState {
     phoneInput : string,
     birthDateInput : string,
     emailInput: string,
+    passwordInput: string,
+    roleInput: string,
     loading: boolean,
     idIsValid : boolean,
     nameIsValid : boolean,
     phoneIsValid : boolean,
     birthDateIsValid : boolean,
     emailIsValid: boolean,
+    passwordIsValid : boolean,
+    roleIsValid : boolean
 }
 
 const styleValid  : any = {
@@ -52,12 +56,16 @@ export class addUser extends React.Component<{},AddUserState>{
             phoneInput : '',
             birthDateInput : '',
             emailInput : '',
+            passwordInput : '',
+            roleInput : '',
             loading : false,
             idIsValid : true,
             nameIsValid : true,
             phoneIsValid : true,
             birthDateIsValid : true,
             emailIsValid : true,
+            passwordIsValid : true,
+            roleIsValid : true,
         }
     }
 
@@ -70,7 +78,7 @@ export class addUser extends React.Component<{},AddUserState>{
                     style ={this.changesStyleInput('Id')}
                     onChangeText={(text) => this.changeStringInput(text,'Id')}
                 />
-                <Text>Name</Text>
+                <Text>Nome</Text>
                 <TextInput
                     style ={this.changesStyleInput('Name')}
                     onChangeText={(text) => this.changeStringInput(text,'Name')}
@@ -91,6 +99,17 @@ export class addUser extends React.Component<{},AddUserState>{
                 <TextInput
                     style ={this.changesStyleInput('Email')}
                     onChangeText={(text) => this.changeStringInput(text,'Email')}
+                />
+                <Text>Senha</Text>
+                <TextInput
+                    style ={this.changesStyleInput('password')}
+                    onChangeText={(text) => this.changeStringInput(text,'password')}
+                    secureTextEntry={true}
+                />
+                <Text>Role</Text>
+                <TextInput
+                    style ={this.changesStyleInput('Role')}
+                    onChangeText={(text) => this.changeStringInput(text,'Role')}
                 />
                 <View style={styles.sectionButtonInput}>
                     {this.state.loading ?
@@ -113,6 +132,8 @@ export class addUser extends React.Component<{},AddUserState>{
         this.setState( { emailIsValid : this.validate.Email(this.state.emailInput)} );
         this.setState( { birthDateIsValid : this.validate.dateBirth(this.state.birthDateInput)} );
         this.setState( { nameIsValid : this.validate.Name(this.state.nameInput)} );
+        this.setState( { passwordIsValid : this.validate.Password(this.state.passwordInput)} );
+        this.setState( { roleIsValid : this.validate.Name(this.state.roleInput)} );
 
         if(this.state.idIsValid && this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid){
             return true;
@@ -164,6 +185,22 @@ export class addUser extends React.Component<{},AddUserState>{
                 }
 
                 break;
+            case 'password':
+                this.setState({passwordInput : text})
+                
+                if (!this.state.passwordIsValid) {
+                    this.setState( { passwordIsValid : this.validate.Password(text)} );
+                }
+
+                break;
+            case 'Role':
+                this.setState({roleInput : text})
+                
+                if (!this.state.roleIsValid) {
+                    this.setState( { roleIsValid : this.validate.UserRole(text)} );
+                }
+
+                break;
         }
     }
 
@@ -192,6 +229,16 @@ export class addUser extends React.Component<{},AddUserState>{
                 return styleInValid;
             case 'DateBirth':
                 if(this.state.birthDateIsValid){
+                    return styleValid;
+                }
+                return styleInValid;
+            case 'password':
+                if(this.state.passwordIsValid){
+                    return styleValid;
+                }
+                return styleInValid;
+            case 'Role':
+                if(this.state.roleIsValid){
                     return styleValid;
                 }
                 return styleInValid;

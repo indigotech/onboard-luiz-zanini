@@ -46,5 +46,11 @@ export class validateRegex {
         return reId.test(Id);
     }
 
+    UserRole(role : string) : boolean{
+
+        return (role).toLowerCase() == 'admin' || (role).toLowerCase() == 'user';
+
+    }
+
 }
 
