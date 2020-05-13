@@ -89,9 +89,7 @@ export class UserList extends React.Component<{},UsersListState>{
         
         try{
             
-            const queryUsers : QueryListUsers = await getUserList(this.state.users.length);
-            this.setState({users : queryUsers.users.nodes});
-            this.setState({loadMoreButton : queryUsers.users.pageInfo.hasNextPage});
+            await this.addUsersState();
             
         }catch{
             this.setState({errorData : true})
@@ -104,10 +102,7 @@ export class UserList extends React.Component<{},UsersListState>{
         try{
         
             this.setState({ loadButton : true })
-            const queryUsers :  QueryListUsers = await getUserList(this.state.users.length);
-            const newDataUsers : ListUser = queryUsers.users.nodes;
-            this.setState({ users : this.state.users.concat(newDataUsers)});
-            this.setState({loadMoreButton : queryUsers.users.pageInfo.hasNextPage});
+            await this.addUsersState();
         
         }
         catch{
@@ -117,6 +112,18 @@ export class UserList extends React.Component<{},UsersListState>{
             this.setState({ loadButton : false });
         }
 
+    }
+
+    private async addUsersState() {
+
+        const queryUsers : QueryListUsers = await getUserList(this.state.users.length);
+        const newDataUsers : ListUser = queryUsers.users.nodes;
+        const hasNextPage : boolean = queryUsers.users.pageInfo.hasNextPage;
+        this.setState({ 
+            users : this.state.users.concat(newDataUsers) , 
+            loadMoreButton : hasNextPage
+        });
+    
     }
 
     private renderItems = ( {item} : any) => (
