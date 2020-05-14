@@ -35,14 +35,14 @@ export class Home extends React.Component {
                             </View>
                         </View>
                         <View style={styles.sectionViewText} >
-                            <UserList/>
+                            <UserList />
                         </View>
                     </View>
                 </ScrollView>
                 <View style = {styles.buttonAddMoreView}>
                     <Button
                         color='#FFFFFF'
-                        onPress = {this.acesUserPage}
+                        onPress = {this.acesUserAddPage}
                         title = '+'
                     />
                 </View>
@@ -63,9 +63,28 @@ export class Home extends React.Component {
         catch{
             Alert.alert('Problemas para deslogar');
         }
-
+    }
+    
+    private acessLoginPage(){
+        Navigation.push('Home', {
+            component: {
+                id: 'Login',
+                name: 'Login',
+                options: {
+                    topBar: {
+                        title: {
+                            text: 'Login'
+                        },
+                        backButton: {
+                            visible: false
+                        }
+                    }
+                }
+            }
+        });
     }
 
+<<<<<<< HEAD
     private acessLoginPage(){
 
         Navigation.push('Home', {
@@ -88,6 +107,9 @@ export class Home extends React.Component {
     }
 
     private acesUserPage() {
+=======
+    private acesUserAddPage() {
+>>>>>>> screen details after touch user view
 
         Navigation.push('Home', {
           component: {
