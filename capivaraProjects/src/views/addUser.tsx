@@ -4,12 +4,16 @@ import {
     View,
     Text,
     Button,
+    ScrollView,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import React, { Component } from 'react';
 import {ValidateRegex} from '../validate/regexValidation';
+import {createUser} from '../apolloConfig/createUser';
 
 interface AddUserState {
+    idInput : string,
     nameInput : string,
     phoneInput : string,
     birthDateInput : string,
@@ -24,7 +28,22 @@ interface AddUserState {
     passwordIsValid : boolean,
     roleIsValid : boolean
 }
-
+interface UserValidation {
+    isNameValid : boolean,
+    isPhoneValid : boolean,
+    isBirthDateValid : boolean,
+    isEmailValid : boolean,
+    isPasswordValid : boolean,
+    isRoleValid : boolean,
+}
+interface User {
+    name : string,
+    phone : string,
+    birthDate : string,
+    email : string,
+    password : string,
+    role : string,
+}
 
 export class addUser extends React.Component<{},AddUserState>{
 
@@ -34,6 +53,7 @@ export class addUser extends React.Component<{},AddUserState>{
         super(props);
     
         this.state = {
+            idInput : '',
             nameInput : '',
             phoneInput : '',
             birthDateInput : '',
@@ -56,35 +76,35 @@ export class addUser extends React.Component<{},AddUserState>{
                 <Text>Nome</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.nameIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Name')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Name')}
                 />
                 <Text>Phone</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.phoneIsValid)]}
-                    onChangeText={(text) => this.changeStringInput  (text,'Phone')}
-                    defaultValue={'(##) ##### ####'}
+                    onChangeText={(text) => this.handleChangeStringInput  (text,'Phone')}
+                    defaultValue={'#########'}
                 />
                 <Text>Data de Aniversário</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.birthDateIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'DateBirth')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'DateBirth')}
                     defaultValue={'dd/mm/yyyy'}
                 />
                 <Text>E-mail</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.emailIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Email')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Email')}
                 />
                 <Text>Senha</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.passwordIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'password')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'password')}
                     secureTextEntry={true}
                 />
                 <Text>Role</Text>
                 <TextInput
                     style ={[styles.borderInput ,this.decideBorderStyle(this.state.roleIsValid)]}
-                    onChangeText={(text) => this.changeStringInput(text,'Role')}
+                    onChangeText={(text) => this.handleChangeStringInput(text,'Role')}
                 />
                 <View style={styles.sectionButtonInput}>
                     {this.state.loading ?
@@ -102,20 +122,68 @@ export class addUser extends React.Component<{},AddUserState>{
 
     private handleButtonPress = () =>{
 
-        this.setState({ 
-                        phoneIsValid       : this.validate.phone(this.state.phoneInput),
-                        emailIsValid       : this.validate.email(this.state.emailInput),
-                        birthDateIsValid   : this.validate.dateBirth(this.state.birthDateInput),
-                        nameIsValid        : this.validate.name(this.state.nameInput),
-                        passwordIsValid    : this.validate.password(this.state.passwordInput),
-                        roleIsValid        : this.validate.name(this.state.roleInput), 
-                    });
+        const check : UserValidation = this.checkInputState();
 
-        return this.state.phoneIsValid && this.state.emailIsValid && this.state.birthDateIsValid  && this.state.passwordIsValid && this.state.roleIsValid;
+        this.setState({ 
+            phoneIsValid       : check.isPhoneValid,
+            emailIsValid       : check.isEmailValid,
+            birthDateIsValid   : check.isBirthDateValid,
+            nameIsValid        : check.isNameValid,
+            passwordIsValid    : check.isPasswordValid,
+            roleIsValid        : check.isRoleValid, 
+        });
+
+        if(check.isBirthDateValid && check.isEmailValid && check.isNameValid && check.isPasswordValid && check.isPhoneValid && check.isRoleValid){
+            
+            const DateFormat : string = this.dateFormat();
+            const newUser : User = this.createUserType(DateFormat);
+            this.createUserInServer(newUser);
+
+            return;
+        }   
+        
+        Alert.alert("Campos inválidos")
 
     }
 
-    private changeStringInput(text : string,typeOfInput : string){
+    private createUserType( date : string) : User {
+        return ({
+            name : this.state.nameInput,
+            phone : this.state.phoneInput,
+            email : this.state.emailInput,
+            birthDate : date,
+            password : this.state.passwordInput,
+            role : this.state.roleInput,
+       });
+    }
+
+    private checkInputState() : UserValidation{
+        
+        return  {
+            isPhoneValid : this.validate.phone(this.state.phoneInput),
+            isNameValid  : this.validate.name(this.state.nameInput),
+            isEmailValid : this.validate.email(this.state.emailInput),
+            isBirthDateValid : this.validate.dateBirth(this.state.birthDateInput),
+            isPasswordValid  : this.validate.password(this.state.passwordInput),
+            isRoleValid :  this.validate.userRole(this.state.roleInput)
+        };
+
+    }
+
+    private dateFormat() : string{
+
+        const birthDateSplit : string[] = this.state.birthDateInput.split('/');
+        const monthTen : number = 10;
+        
+        if((+birthDateSplit[1]) < monthTen ){
+            return (birthDateSplit[2]+'-0'+(+birthDateSplit[1])+'-'+birthDateSplit[0])
+        }
+
+        return (birthDateSplit[2]+'-'+(+birthDateSplit[1])+'-'+birthDateSplit[0]);
+            
+    }
+
+    private handleChangeStringInput(text : string,typeOfInput : string){
 
         switch(typeOfInput){
             case 'Name' :
@@ -175,6 +243,27 @@ export class addUser extends React.Component<{},AddUserState>{
 
     }
 
+    private async createUserInServer(newUser : User) : Promise<void>{
+
+        try{
+            
+            this.setState({ loading : true} );
+            await createUser(newUser);
+            Alert.alert('Usuário criado com sucesso!');
+            
+        }catch(error){
+
+            if(error.graphQLErrors[0] === undefined){
+                Alert.alert('Problema de conexão com o servidor');
+                return;
+            }
+            Alert.alert(error.graphQLErrors[0].message);
+
+        }finally{   
+            this.setState({ loading : false} );
+        }   
+
+    }
 }
 
 const styles = StyleSheet.create({
