@@ -6,11 +6,12 @@ import { Navigation } from "react-native-navigation";
 import App from './App';
 import {Home} from './src/views/Home';
 import {addUser} from './src/views/addUser';
+import {User} from './src/views/User';
 
 Navigation.registerComponent('Login', () => App);
 Navigation.registerComponent('Home', () => Home);
 Navigation.registerComponent('addUser', () => addUser);
-
+Navigation.registerComponent('User', () => User);
 
 const loginPage = {
   root: {
@@ -20,6 +21,21 @@ const loginPage = {
         {
           component: {
             name: 'Login'
+          }
+        }
+      ]
+    }
+  }
+};
+
+const UserPage = {
+  root: {
+    stack: {
+      id: 'User',
+      children: [
+        {
+          component: {
+            name: 'User'
           }
         }
       ]
@@ -53,6 +69,14 @@ const userAddPage = {
           }
         }
       ]
+    }
+  }
+};
+
+User.options = {
+  topBar: {
+    title: {
+      text: 'Adicionar novo Usuário',
     }
   }
 };
