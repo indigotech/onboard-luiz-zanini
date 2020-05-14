@@ -84,32 +84,7 @@ export class Home extends React.Component {
         });
     }
 
-<<<<<<< HEAD
-    private acessLoginPage(){
-
-        Navigation.push('Home', {
-            component: {
-                id: 'Login',
-                name: 'Login',
-                options: {
-                    topBar: {
-                        title: {
-                            text: 'Login'
-                        },
-                        backButton: {
-                            visible: false
-                        }
-                    }
-                }
-            }
-        });
-
-    }
-
-    private acesUserPage() {
-=======
     private acesUserAddPage() {
->>>>>>> screen details after touch user view
 
         Navigation.push('Home', {
           component: {
