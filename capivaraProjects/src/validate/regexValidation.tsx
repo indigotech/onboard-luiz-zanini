@@ -3,7 +3,6 @@ import { Alert } from "react-native";
 const reEmail: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const rePassword: RegExp = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z$*&@#]{7,}$/;
 const reDate: RegExp = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-const rePhone: RegExp = /^\d$/;
 
 export class ValidateRegex {
 
@@ -38,11 +37,7 @@ export class ValidateRegex {
     }
 
     phone(phoneNumber : string) : boolean{
-        return rePhone.test(phoneNumber);
-    }
-
-    id(Id : string) : boolean{
-        return reId.test(Id);
+        return !isNaN(+phoneNumber) && !(phoneNumber == '');
     }
 
     userRole(role : string) : boolean{

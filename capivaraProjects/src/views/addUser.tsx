@@ -28,11 +28,18 @@ interface AddUserState {
     passwordIsValid : boolean,
     roleIsValid : boolean
 }
-
+interface UserValidation {
+    isNameValid : boolean,
+    isPhoneValid : boolean,
+    isBirthDateValid : boolean,
+    isEmailValid : boolean,
+    isPasswordValid : boolean,
+    isRoleValid : boolean,
+}
 interface User {
     name : string,
     phone : string,
-    dateBirth : string,
+    birthDate : string,
     email : string,
     password : string,
     role : string,
@@ -115,16 +122,18 @@ export class addUser extends React.Component<{},AddUserState>{
 
     private handleButtonPress = () =>{
 
+        const check : UserValidation = this.checkInputState();
+
         this.setState({ 
-            phoneIsValid       : this.validate.phone(this.state.phoneInput),
-            emailIsValid       : this.validate.email(this.state.emailInput),
-            birthDateIsValid   : this.validate.dateBirth(this.state.birthDateInput),
-            nameIsValid        : this.validate.name(this.state.nameInput),
-            passwordIsValid    : this.validate.password(this.state.passwordInput),
-            roleIsValid        : this.validate.name(this.state.roleInput), 
+            phoneIsValid       : check.isPhoneValid,
+            emailIsValid       : check.isEmailValid,
+            birthDateIsValid   : check.isBirthDateValid,
+            nameIsValid        : check.isNameValid,
+            passwordIsValid    : check.isPasswordValid,
+            roleIsValid        : check.isRoleValid, 
         });
 
-        if(this.checkInputState()){
+        if(check.isBirthDateValid && check.isEmailValid && check.isNameValid && check.isPasswordValid && check.isPhoneValid && check.isRoleValid){
             
             const DateFormat : string = this.dateFormat();
             const newUser : User = this.createUserType(DateFormat);
@@ -142,15 +151,23 @@ export class addUser extends React.Component<{},AddUserState>{
             name : this.state.nameInput,
             phone : this.state.phoneInput,
             email : this.state.emailInput,
-            dateBirth : date,
+            birthDate : date,
             password : this.state.passwordInput,
             role : this.state.roleInput,
        });
     }
 
-    private checkInputState() : boolean{
-        return this.validate.phone(this.state.phoneInput) && this.validate.email(this.state.emailInput) && this.validate.dateBirth(this.state.birthDateInput)
-        && this.validate.name(this.state.nameInput) && this.validate.password(this.state.passwordInput) && this.validate.name(this.state.roleInput);
+    private checkInputState() : UserValidation{
+        
+        return  {
+            isPhoneValid : this.validate.phone(this.state.phoneInput),
+            isNameValid  : this.validate.name(this.state.nameInput),
+            isEmailValid : this.validate.email(this.state.emailInput),
+            isBirthDateValid : this.validate.dateBirth(this.state.birthDateInput),
+            isPasswordValid  : this.validate.password(this.state.passwordInput),
+            isRoleValid :  this.validate.userRole(this.state.roleInput)
+        };
+
     }
 
     private dateFormat() : string{
@@ -236,7 +253,7 @@ export class addUser extends React.Component<{},AddUserState>{
             
         }catch(error){
 
-            if(error.graphQLErrors[0] == undefined){
+            if(error.graphQLErrors[0] === undefined){
                 Alert.alert('Problema de conexão com o servidor');
                 return;
             }

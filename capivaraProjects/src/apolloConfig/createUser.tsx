@@ -5,7 +5,7 @@ import ApolloClient from 'apollo-boost';
 interface User {
     name : string,
     phone : string,
-    dateBirth : string,
+    birthDate : string,
     email : string,
     password : string,
     role : string,
@@ -44,17 +44,12 @@ export async function createUser(user : User) : Promise<any> {
         }
     });
 
-    const name : string  = user.name;
-    const phone : string = user.phone;
-    const birthDate : string = user.dateBirth;
-    const email : string = user.email;
-    const password : string = user.password;
-    const role : string = user.role.toLowerCase();
+    user.role = user.role.toLowerCase();
 
     const query = await client.mutate<MutationCreateUser>({
         mutation: mutateCreateUser,
         variables : {
-            data : {name, phone, birthDate, email, password, role}
+            data : user,
         }
     })
 
