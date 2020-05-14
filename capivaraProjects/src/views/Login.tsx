@@ -28,15 +28,15 @@ interface loginValidate {
   isPasswordValid: boolean
 }
 
-class Login extends React.Component<{}, LoginState>{
+export default class Login extends React.Component<{}, LoginState>{
 
-  validate: ValidateRegex;
+  validate = new ValidateRegex();
 
   constructor(props: any) {
 
     super(props);
 
-    this.validate = new ValidateRegex();
+    this.validate = this.validate;
     this.state = {
       emailInput: "",
       passwordInput: "",
@@ -52,14 +52,14 @@ class Login extends React.Component<{}, LoginState>{
       <View style={styles.sectionViewInput}>
         <Text style={styles.sectionText}>E-mail</Text>
         <TextInput
-          style={this.inputStyle('Email')}
-          onChangeText={this.changeTextInputEmail}
+          style={ [styles.borderInput ,this.inputStyle(this.state.isEmailValid)] }
+          onChangeText={this.handleChangeTextInputEmail}
         />
         <Text style={styles.sectionText} >Senha</Text>
         <TextInput
           secureTextEntry={true}
-          style={this.inputStyle('Password')}
-          onChangeText={this.changeTextInputPassword}
+          style={ [styles.borderInput ,this.inputStyle(this.state.isPasswordValid)] }
+          onChangeText={this.handleChangeTextInputPassword}
         />
         <View style={styles.sectionButtonInput}>
             {this.state.loading ?
@@ -75,28 +75,9 @@ class Login extends React.Component<{}, LoginState>{
     );
   }
 
-  private inputStyle(typeOfInput : string): any {
+  private inputStyle(typeOfInput : boolean): any {
 
-    let isValidStyle : boolean;
-    typeOfInput == 'Email' ? isValidStyle = this.state.isEmailValid : isValidStyle = this.state.isPasswordValid;
-
-    if (isValidStyle) {
-      return {
-        height: 40,
-        borderColor: '#C0C0C0',
-        borderWidth: 2,
-        borderRadius: 15,
-        marginBottom: 20,
-      }
-    }
-
-    return {
-      height: 40,
-      borderColor: '#ff9090',
-      borderWidth: 2,
-      borderRadius: 15,
-      marginBottom: 20,
-    }
+    return typeOfInput ? {borderColor : '#C0C0C0'} : {borderColor: '#ff9090'};
 
   }
 
@@ -124,16 +105,42 @@ class Login extends React.Component<{}, LoginState>{
   private handleButtonTap = async () => {
 
     const validacaoInput : loginValidate =  validateLoginInput(this.state, this.acessHomePage);
+    this.changeStateInput(validacaoInput);
 
+    if(validacaoInput.isEmailValid && validacaoInput.isPasswordValid){
+    
+      this.getConnection();
+    
+    }
+  }
+
+  private handleChangeTextInputEmail = (text) =>{
+    
+    this.setState({ emailInput: text });
+    if (!this.state.isEmailValid) {
+      this.setState({ isEmailValid: this.validate.email(text) });
+    }
+  }
+
+  private handleChangeTextInputPassword = (text) =>{
+    
+    this.setState({ passwordInput: text });
+    if (!this.state.isPasswordValid) {
+      this.setState({ isPasswordValid: this.validate.password(text) });
+    }
+  }
+
+  private changeStateInput(validacaoInput : loginValidate){
+    
     this.setState({
       isEmailValid: validacaoInput.isEmailValid,
       isPasswordValid: validacaoInput.isPasswordValid,
     });
 
-    if(!validacaoInput.isEmailValid || !validacaoInput.isPasswordValid){
-      return;
-    }
+  }
 
+  private async getConnection(){
+    
     try{
 
       this.setState({ loading: true });  
@@ -151,22 +158,6 @@ class Login extends React.Component<{}, LoginState>{
 
   }
 
-  private changeTextInputEmail = (text) =>{
-    
-    this.setState({ emailInput: text });
-    if (!this.state.isEmailValid) {
-      this.setState({ isEmailValid: this.validate.email(text) });
-    }
-  }
-
-  private changeTextInputPassword = (text) =>{
-    
-    this.setState({ passwordInput: text });
-    if (!this.state.isPasswordValid) {
-      this.setState({ isPasswordValid: this.validate.password(text) });
-    }
-  }
-
   componentDidMount() {
 
     getToken()
@@ -181,6 +172,12 @@ class Login extends React.Component<{}, LoginState>{
 };
 
 const styles = StyleSheet.create({
+  borderInput : {
+    height: 40,
+    borderWidth: 2,
+    borderRadius: 15,
+    marginBottom: 20,
+  },
   sectionTextInput: {
     height: 40,
     borderColor: "#C0C0C0",
@@ -204,5 +201,3 @@ const styles = StyleSheet.create({
   }
 
 });
-
-export default Login;
