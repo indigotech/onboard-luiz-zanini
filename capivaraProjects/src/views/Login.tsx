@@ -14,6 +14,8 @@ import { getToken } from '../storage/getToken';
 import { Navigation } from 'react-native-navigation';
 import { ValidateRegex } from '../validate/regexValidation';
 import {signIn} from '../apolloConfig/signIn';
+import {ButtonStyle} from '../components/Button';
+import {Form} from '../components/Form';
 
 interface LoginState {
   emailInput: string,
@@ -35,8 +37,6 @@ export default class Login extends React.Component<{}, LoginState>{
   constructor(props: any) {
 
     super(props);
-
-    this.validate = this.validate;
     this.state = {
       emailInput: "",
       passwordInput: "",
@@ -50,35 +50,26 @@ export default class Login extends React.Component<{}, LoginState>{
   render() {
     return (
       <View style={styles.sectionViewInput}>
-        <Text style={styles.sectionText}>E-mail</Text>
-        <TextInput
-          style={ [styles.borderInput ,this.inputStyle(this.state.isEmailValid)] }
-          onChangeText={this.handleChangeTextInputEmail}
+        <Form
+          title={'Email'}
+          validate = {this.validate.email}
+          handleText = {this.handleChangeInputEmail}
+          inputText = {this.state.emailInput}
         />
-        <Text style={styles.sectionText} >Senha</Text>
-        <TextInput
-          secureTextEntry={true}
-          style={ [styles.borderInput ,this.inputStyle(this.state.isPasswordValid)] }
-          onChangeText={this.handleChangeTextInputPassword}
+        <Form
+          title={'Senha'}
+          validate = {this.validate.password}
+          handleText = {this.handleChangeInputPassword}
+          inputText = {this.state.passwordInput}
+          password = {true}
         />
-        <View style={styles.sectionButtonInput}>
-            {this.state.loading ?
-            <ActivityIndicator size="small" color="#0000ff" /> :
-            <Button
-              color="#FFFFFF"
-              onPress={this.handleButtonTap}
-              title='login'
-            >
-            </Button>}
-        </View>
+        <ButtonStyle 
+          title='Login' 
+          pressButton={this.handleButtonTap} 
+          loading={this.state.loading} 
+        />
       </View>
     );
-  }
-
-  private inputStyle(typeOfInput : boolean): any {
-
-    return typeOfInput ? {borderColor : '#C0C0C0'} : {borderColor: '#ff9090'};
-
   }
 
   private acessHomePage() {
@@ -114,20 +105,12 @@ export default class Login extends React.Component<{}, LoginState>{
     }
   }
 
-  private handleChangeTextInputEmail = (text) =>{
-    
+  private handleChangeInputEmail = (text) =>{
     this.setState({ emailInput: text });
-    if (!this.state.isEmailValid) {
-      this.setState({ isEmailValid: this.validate.email(text) });
-    }
   }
 
-  private handleChangeTextInputPassword = (text) =>{
-    
+  private handleChangeInputPassword = (text) =>{
     this.setState({ passwordInput: text });
-    if (!this.state.isPasswordValid) {
-      this.setState({ isPasswordValid: this.validate.password(text) });
-    }
   }
 
   private changeStateInput(validacaoInput : loginValidate){
