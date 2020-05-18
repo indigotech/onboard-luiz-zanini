@@ -1,16 +1,13 @@
 import {
-    TextInput,
     StyleSheet,
     View,
-    Text,
-    Button,
-    ScrollView,
-    ActivityIndicator,
     Alert,
 } from 'react-native';
-import React, { Component } from 'react';
+import React from 'react';
 import {ValidateRegex} from '../validate/regexValidation';
 import {createUser} from '../apolloConfig/createUser';
+import { ButtonStyle } from '../components/Button';
+import { FormField } from '../components/FormField';
 
 interface AddUserState {
     idInput : string,
@@ -73,54 +70,53 @@ export class addUser extends React.Component<{},AddUserState>{
     render(){
         return(
             <View style={styles.sectionViewInput}>
-                <Text>Nome</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.nameIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput(text,'Name')}
+                <FormField
+                    title={'Nome'}
+                    validate = {this.validate.name}
+                    handleText = {this.handleChangeInputName}
+                    inputText = {this.state.nameInput}
                 />
-                <Text>Phone</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.phoneIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput  (text,'Phone')}
-                    defaultValue={'#########'}
+                <FormField
+                    title={'Telefone'}
+                    validate = {this.validate.phone}
+                    handleText = {this.handleChangeInputPhone}
+                    inputText = {this.state.phoneInput}
                 />
-                <Text>Data de Aniversário</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.birthDateIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput(text,'DateBirth')}
-                    defaultValue={'dd/mm/yyyy'}
+                <FormField
+                    title={'Data de aniversário'}
+                    validate = {this.validate.dateBirth}
+                    handleText = {this.handleChangeBirthDateInput}
+                    inputText = {this.state.birthDateInput}
                 />
-                <Text>E-mail</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.emailIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput(text,'Email')}
+                <FormField
+                    title={'E-mail'}
+                    validate = {this.validate.email}
+                    handleText = {this.handleChangeInputEmail}
+                    inputText = {this.state.emailInput}
                 />
-                <Text>Senha</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.passwordIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput(text,'password')}
-                    secureTextEntry={true}
+                <FormField
+                    title={'Senha'}
+                    validate = {this.validate.password}
+                    handleText = {this.handleChangePasswordInput}
+                    inputText = {this.state.passwordInput}
+                    password = {true}
                 />
-                <Text>Role</Text>
-                <TextInput
-                    style ={[styles.borderInput ,this.decideBorderStyle(this.state.roleIsValid)]}
-                    onChangeText={(text) => this.handleChangeStringInput(text,'Role')}
+                <FormField
+                    title={'Role'}
+                    validate = {this.validate.userRole}
+                    handleText = {this.handleChangeRoleInput}
+                    inputText = {this.state.passwordInput}
                 />
-                <View style={styles.sectionButtonInput}>
-                    {this.state.loading ?
-                    <ActivityIndicator size="small" color="#0000ff" /> :
-                    <Button
-                    color="#FFFFFF"
-                    onPress={this.handleButtonPress}
-                    title='finish'
-                    >
-                    </Button>}
-                </View>
+                <ButtonStyle 
+                    title='Enviar' 
+                    pressButton={this.handleButtonPress} 
+                    loading={this.state.loading} 
+                />
             </View>
         );
     }
 
-    private handleButtonPress = () =>{
+    private handleButtonPress = () => {
 
         const check : UserValidation = this.checkInputState();
 
@@ -147,6 +143,7 @@ export class addUser extends React.Component<{},AddUserState>{
     }
 
     private createUserType( date : string) : User {
+       
         return ({
             name : this.state.nameInput,
             phone : this.state.phoneInput,
@@ -154,7 +151,8 @@ export class addUser extends React.Component<{},AddUserState>{
             birthDate : date,
             password : this.state.passwordInput,
             role : this.state.roleInput,
-       });
+        });
+
     }
 
     private checkInputState() : UserValidation{
@@ -183,64 +181,28 @@ export class addUser extends React.Component<{},AddUserState>{
             
     }
 
-    private handleChangeStringInput(text : string,typeOfInput : string){
-
-        switch(typeOfInput){
-            case 'Name' :
-                this.setState({nameInput : text});
-
-                if (!this.state.nameIsValid) {
-                    this.setState( { nameIsValid : this.validate.name(text)} );
-                }
-
-                break;
-            case 'Phone' :
-                this.setState({phoneInput : text});
-
-                if (!this.state.phoneIsValid) {
-                    this.setState( { phoneIsValid : this.validate.phone(text)} );
-                }
-
-                break;
-            case 'Email' :
-                this.setState({emailInput : text})
-
-                if (!this.state.emailIsValid) {
-                    this.setState( { emailIsValid : this.validate.email(text)} );
-                }
-
-                break;
-            case 'DateBirth':
-                this.setState({birthDateInput : text})
-                
-                if (!this.state.birthDateIsValid) {
-                    this.setState( { birthDateIsValid : this.validate.dateBirth(text)} );
-                }
-
-                break;
-            case 'password':
-                this.setState({passwordInput : text})
-                
-                if (!this.state.passwordIsValid) {
-                    this.setState( { passwordIsValid : this.validate.password(text)} );
-                }
-
-                break;
-            case 'Role':
-                this.setState({roleInput : text})
-                
-                if (!this.state.roleIsValid) {
-                    this.setState( { roleIsValid : this.validate.userRole(text)} );
-                }
-
-                break;
-        }
+    private handleChangeInputName = (text) =>{
+        this.setState({ nameInput: text });
+    }
+    
+    private handleChangeInputPhone = (text) =>{
+        this.setState({ phoneInput: text });
+    }
+    
+    private handleChangeInputEmail= (text) =>{
+        this.setState({ emailInput : text });
     }
 
-    private decideBorderStyle(typeOfStyle : boolean) : any{
-        
-        return typeOfStyle ? {borderColor : '#C0C0C0'} : {borderColor : '#ff9090' };
+    private handleChangeBirthDateInput= (text) =>{
+        this.setState({ birthDateInput : text });
+    }
 
+    private handleChangePasswordInput= (text) =>{
+        this.setState({ passwordInput : text });
+    }
+
+    private handleChangeRoleInput= (text) =>{
+        this.setState({ roleInput : text });
     }
 
     private async createUserInServer(newUser : User) : Promise<void>{
