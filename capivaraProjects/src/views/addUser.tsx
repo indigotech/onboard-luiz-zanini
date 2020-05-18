@@ -7,7 +7,7 @@ import React from 'react';
 import {ValidateRegex} from '../validate/regexValidation';
 import {createUser} from '../apolloConfig/createUser';
 import { ButtonStyle } from '../components/Button';
-import { Form } from '../components/Form';
+import { FormField } from '../components/FormField';
 
 interface AddUserState {
     idInput : string,
@@ -70,38 +70,38 @@ export class addUser extends React.Component<{},AddUserState>{
     render(){
         return(
             <View style={styles.sectionViewInput}>
-                <Form
+                <FormField
                     title={'Nome'}
                     validate = {this.validate.name}
                     handleText = {this.handleChangeInputName}
                     inputText = {this.state.nameInput}
                 />
-                <Form
+                <FormField
                     title={'Telefone'}
                     validate = {this.validate.phone}
                     handleText = {this.handleChangeInputPhone}
                     inputText = {this.state.phoneInput}
                 />
-                <Form
+                <FormField
                     title={'Data de aniversário'}
                     validate = {this.validate.dateBirth}
                     handleText = {this.handleChangeBirthDateInput}
                     inputText = {this.state.birthDateInput}
                 />
-                <Form
+                <FormField
                     title={'E-mail'}
                     validate = {this.validate.email}
                     handleText = {this.handleChangeInputEmail}
                     inputText = {this.state.emailInput}
                 />
-                <Form
+                <FormField
                     title={'Senha'}
                     validate = {this.validate.password}
                     handleText = {this.handleChangePasswordInput}
                     inputText = {this.state.passwordInput}
                     password = {true}
                 />
-                <Form
+                <FormField
                     title={'Role'}
                     validate = {this.validate.userRole}
                     handleText = {this.handleChangeRoleInput}

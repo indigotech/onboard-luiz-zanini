@@ -15,7 +15,7 @@ import { Navigation } from 'react-native-navigation';
 import { ValidateRegex } from '../validate/regexValidation';
 import {signIn} from '../apolloConfig/signIn';
 import {ButtonStyle} from '../components/Button';
-import {Form} from '../components/Form';
+import {FormField} from '../components/FormField';
 
 interface LoginState {
   emailInput: string,
@@ -50,13 +50,13 @@ export default class Login extends React.Component<{}, LoginState>{
   render() {
     return (
       <View style={styles.sectionViewInput}>
-        <Form
+        <FormField
           title={'Email'}
           validate = {this.validate.email}
           handleText = {this.handleChangeInputEmail}
           inputText = {this.state.emailInput}
         />
-        <Form
+        <FormField
           title={'Senha'}
           validate = {this.validate.password}
           handleText = {this.handleChangeInputPassword}

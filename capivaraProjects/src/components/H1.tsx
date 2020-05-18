@@ -2,10 +2,6 @@ import React from 'react';
 import { Text } from 'react-native';
 import styled from 'styled-components/native'
 
-interface H1Props {
-    title : string
-}
-
 const H1Style = styled.Text`
     font-size: 24px;
     margin-top: 20px;
@@ -15,11 +11,11 @@ const H1Style = styled.Text`
     text-align: center;
 `;
 
-export const H1: React.FC<H1Props> = (props) => {
+export const H1: React.FC = (props) => {
 
     return(
         <H1Style>
-            <Text>{props.title}</Text>
+            <Text>{props.children}</Text>
         </H1Style>
     );
 

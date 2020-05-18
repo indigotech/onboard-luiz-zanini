@@ -10,7 +10,7 @@ import {H1} from './src/components/H1';
 const App = () => {
   return (
       <View style={styles.container}>
-        <H1 title={'Bem-vindo(a) à Taqtile!'} />
+        <H1> Bem-vindo(a) à Taqtile! </H1>
         <Login/>
       </View>
   );

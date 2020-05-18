@@ -35,7 +35,7 @@ const ViewStyled = styled.View`
 `;
 
 
-export const Form : React.FC<FormProps> = (props) => {
+export const FormField : React.FC<FormProps> = (props) => {
 
     const [error , setError] = React.useState<boolean>(false);
 
